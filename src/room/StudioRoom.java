@@ -1,9 +1,10 @@
+package room;
 
-public class SuiteRoom implements Room {
-
-   private int NUMBER_OF_BEDS = 2;
-   private int NUMBER_OF_OCCUPANTS = 4;
-   private double cost = 179.99;
+public class StudioRoom implements Room {
+   
+   private int NUMBER_OF_BEDS = 1;
+   private int NUMBER_OF_OCCUPANTS = 2;
+   private double cost = 149.99;
    
    @Override
    public int getNumOfBeds() {

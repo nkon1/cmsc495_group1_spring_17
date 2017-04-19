@@ -1,5 +1,9 @@
-
-public class EmployeeLoginView implements View {
+package view;
+public class ReservationView implements View {
+   
+   ReservationView() {
+      
+   }
 
    @Override
    public void displayErrorMessage(String message) {
@@ -10,7 +14,6 @@ public class EmployeeLoginView implements View {
    @Override
    public ViewType getViewType() {
       // TODO Auto-generated method stub
-      return null;
+      return ViewType.RESERVATION;
    }
-
 }

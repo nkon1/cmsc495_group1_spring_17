@@ -1,12 +1,10 @@
-public class ParadiseRoom implements Room {
+package room;
+
+public class SuiteRoom implements Room {
 
    private int NUMBER_OF_BEDS = 2;
    private int NUMBER_OF_OCCUPANTS = 4;
-   private double cost = 279.99;
-
-   private boolean Jacuzzi;
-   private boolean fireplace;
-   private boolean microwave;
+   private double cost = 179.99;
    
    @Override
    public int getNumOfBeds() {
@@ -25,17 +23,4 @@ public class ParadiseRoom implements Room {
       // TODO Auto-generated method stub
       return cost;
    }
-
-   public boolean hasJacuzzi(){
-	    return true;
-   }
-
-   public boolean hasFireplace(){
-	    return fireplace;
-   }
-
-   public boolean hasMicrowave(){
-	    return microwave;
-   }
-
 }

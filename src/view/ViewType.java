@@ -1,3 +1,4 @@
+package view;
 
 public enum ViewType {
    LOGIN, CUSTOMER_LOGIN, NEW_CUSTOMER, EMPLOYEE_LOGIN, RESERVATION, MAIN

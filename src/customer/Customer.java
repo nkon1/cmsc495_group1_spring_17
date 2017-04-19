@@ -1,3 +1,4 @@
+package customer;
 
 public class Customer {
    private String firstName;

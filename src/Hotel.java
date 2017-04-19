@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import room.SuiteRoom;
+import room.StudioRoom;
+import room.Room;
 
 public class Hotel {
 
@@ -37,7 +40,7 @@ public class Hotel {
          System.out.print("Enter the number of nights you want to stay: ");
          int numOfNights = Integer.parseInt(scanner.nextLine());
          
-         reservations.add(new Reservation(new Occupant(occupantName, numOfGuests), room, numOfNights));
+         //reservations.add(new Reservation(new Occupant(new Customer(), numOfGuests), room, numOfNights));
       } else {
          System.out.println("No rooms available for reserving");
       }
@@ -70,9 +73,9 @@ public class Hotel {
       StringBuilder sb = new StringBuilder();
       for(Reservation reservation : reservations) {
          sb.append(String.format("\n\n==================== Reservation for %s ====================\n\n", 
-               reservation.getOccupant().getName()));
+               reservation.getOccupant().toString()));
          sb.append(String.format("Occupant: %s\nGuests: %d\nNumber of Nights: %d\nCost of Room: %.2f",
-               reservation.getOccupant().getName(),
+               reservation.getOccupant().toString(),
                reservation.getOccupant().getNumOfGuests(),
                reservation.getNumOfNights(),
                reservation.getCost()));

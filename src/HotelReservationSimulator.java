@@ -1,3 +1,6 @@
+import view.View;
+import view.LoginView;
+import view.MainView;
 import java.util.Scanner;
 
 public class HotelReservationSimulator {

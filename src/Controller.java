@@ -1,3 +1,11 @@
+import view.View;
+import view.LoginView;
+import view.MainView;
+import view.ViewType;
+import view.CustomerLoginView;
+import view.ReservationView;
+import view.NewCustomerView;
+import view.EmployeeLoginView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -22,16 +30,20 @@ public class Controller {
       // Lookup the view and add its listeners
       if(view.getViewType() == ViewType.CUSTOMER_LOGIN) {
          CustomerLoginView clv = (CustomerLoginView)view;
+         
       } else if(view.getViewType() == ViewType.NEW_CUSTOMER) {
          NewCustomerView ncv = (NewCustomerView)view;
          ncv.addCancelButtonListener(new NewCustomerCancelButtonListener(this));
          ncv.addSubmitButtonListener(new NewCustomerSubmitButtonListener(this));
+         
       } else if(view.getViewType() == ViewType.EMPLOYEE_LOGIN) {
          view = (EmployeeLoginView)view;
+         
       } else if(view.getViewType() == ViewType.LOGIN) {
          LoginView lv = (LoginView)view;
          lv.addLoginNewCustomerButtonListener(new LoginNewCustomerButtonListener(this));
          lv.addLoginButtonListener(new LoginButtonListener(this));
+         
       } else if(view.getViewType() == ViewType.RESERVATION) {
          view = (ReservationView)view;
       }

@@ -1,3 +1,4 @@
+package view;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 
@@ -17,7 +18,7 @@ public class LoginView extends JPanel implements View {
    private JButton loginButton = new JButton("Log In");
    private JButton newCustomerButton = new JButton("New Customer");
    
-   LoginView() {
+   public LoginView() {
       mainPanel.setLayout(new GridLayout(2, 0));
       
       JPanel loginPanel = new JPanel();

@@ -1,22 +1,28 @@
+import customer.Customer;
 
 public class Occupant {
    
-   private String name;
+   private Customer customer;
    private int numOfGuests = 0;
    
-   public Occupant(String name, int numOfGuests) {
-      this.name = name;
+   public Occupant(Customer customer, int numOfGuests) {
+      this.customer = customer;
       this.numOfGuests = numOfGuests;
    }
    
-   public void setName(String name) {
-      this.name = name;
+   public void setCustomer(Customer customer) {
+      this.customer = customer;
    }
    
    public void setNumOfGuests(int numOfGuests) {
       this.numOfGuests = numOfGuests;
    }
    
-   public String getName() { return name; }
+   public Customer getCustomer() { return customer; }
    public int getNumOfGuests() { return numOfGuests; }
+   
+   @Override
+   public String toString() {
+      return String.format("%s, %s", customer.getLastName(), customer.getFirstName());
+   }
 }

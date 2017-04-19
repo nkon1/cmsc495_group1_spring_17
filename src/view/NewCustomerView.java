@@ -1,3 +1,4 @@
+package view;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 
@@ -45,7 +46,7 @@ public class NewCustomerView extends JPanel implements View {
    private JButton submitButton = new JButton("Submit");
    private JButton cancelButton = new JButton("Cancel");
    
-   NewCustomerView() {
+   public NewCustomerView() {
       JPanel infoPanel = new JPanel(new GridLayout(3, 2));
       infoPanel.add(createUserPanel());
       infoPanel.add(createPasswordPanel());

@@ -1,5 +1,6 @@
+package view;
 
-public class CustomerLoginView implements View {
+public class EmployeeLoginView implements View {
 
    @Override
    public void displayErrorMessage(String message) {

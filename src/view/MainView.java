@@ -1,9 +1,7 @@
-import java.awt.Color;
+package view;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridLayout;
 
-import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;

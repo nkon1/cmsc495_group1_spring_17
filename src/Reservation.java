@@ -1,4 +1,4 @@
-
+import room.Room;
 public class Reservation {
 
    private Occupant occupant;

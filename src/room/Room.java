@@ -1,3 +1,4 @@
+package room;
 
 public interface Room {
    public int getNumOfBeds();
