@@ -1,3 +1,4 @@
+package hotel;
 import view.View;
 import view.LoginView;
 import view.MainView;
@@ -10,9 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
 
 public class Controller {
    private Model model;

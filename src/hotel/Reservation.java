@@ -1,3 +1,4 @@
+package hotel;
 import room.Room;
 public class Reservation {
 

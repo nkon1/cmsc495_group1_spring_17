@@ -1,3 +1,4 @@
+package hotel;
 import customer.Customer;
 
 public class Occupant {

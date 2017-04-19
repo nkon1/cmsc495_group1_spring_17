@@ -1,3 +1,4 @@
+package hotel;
 import view.View;
 import view.LoginView;
 import view.MainView;
