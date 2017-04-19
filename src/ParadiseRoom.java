@@ -27,7 +27,7 @@ public class ParadiseRoom implements Room {
    }
 
    public boolean hasJacuzzi(){
-	    return jacuzzi;
+	    return true;
    }
 
    public boolean hasFireplace(){

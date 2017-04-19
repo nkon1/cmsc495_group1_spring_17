@@ -1,21 +1,22 @@
-import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-public class NewCustomerView extends JPanel {
+public class NewCustomerView extends JPanel implements View {
    private static final long serialVersionUID = 3518506359986385254L;
    private JPanel mainPanel = new JPanel();
    
    // User panel labels
    private JLabel firstNameLabel = new JLabel("First Name");
    private JLabel lastNameLabel = new JLabel("Last Name");
-   private JLabel houseNumberLabel = new JLabel("#");
-   private JLabel streetNameLabel = new JLabel("Name");
+   private JLabel streetNameLabel = new JLabel("Address");
    private JLabel cityLabel = new JLabel("City");
    private JLabel stateLabel = new JLabel("State");
    private JLabel emailLabel = new JLabel("Email");
@@ -29,7 +30,6 @@ public class NewCustomerView extends JPanel {
    // User panel fields
    private JTextField firstNameTextField = new JTextField(20);
    private JTextField lastNameTextField = new JTextField(20);
-   private JTextField houseNumberTextField = new JTextField(8);
    private JTextField streetNameTextField = new JTextField(20);
    private JTextField cityTextField = new JTextField(20);
    private JTextField stateTextField = new JTextField(20);
@@ -38,7 +38,7 @@ public class NewCustomerView extends JPanel {
    private JPasswordField passwordTextField = new JPasswordField(20);
    private JPasswordField confirmPasswordTextField = new JPasswordField(20);
    private JTextField ccNumberTextField = new JTextField(16);
-   private JTextField ccExpDateTextField = new JTextField(4);
+   private JTextField ccExpDateTextField = new JTextField(7);
    private JTextField ccSecCodeTextField = new JTextField(4);
    
    // Buttons
@@ -46,12 +46,15 @@ public class NewCustomerView extends JPanel {
    private JButton cancelButton = new JButton("Cancel");
    
    NewCustomerView() {
-      mainPanel.setLayout(new GridLayout(4, 2));
-      mainPanel.add(createUserPanel());
-      mainPanel.add(createPasswordPanel());
-      mainPanel.add(createAddressPanel());
-      mainPanel.add(createEmailPanel());
-      mainPanel.add(createCreditCardPanel());
+      JPanel infoPanel = new JPanel(new GridLayout(3, 2));
+      infoPanel.add(createUserPanel());
+      infoPanel.add(createPasswordPanel());
+      infoPanel.add(createAddressPanel());
+      infoPanel.add(createEmailPanel());
+      infoPanel.add(createCreditCardPanel());
+      
+      mainPanel.setLayout(new GridLayout(2, 0));
+      mainPanel.add(infoPanel);
       mainPanel.add(createSubmissionPanel());
       
       this.add(mainPanel);
@@ -70,6 +73,7 @@ public class NewCustomerView extends JPanel {
       
       panel.add(top);
       panel.add(bottom);
+      panel.setBorder(BorderFactory.createTitledBorder("Customer Information"));
       return panel;
    }
    
@@ -85,6 +89,7 @@ public class NewCustomerView extends JPanel {
       bottom.add(confirmPasswordLabel);
       bottom.add(confirmPasswordTextField);
       panel.add(bottom);
+      panel.setBorder(BorderFactory.createTitledBorder("Password"));
       return panel; 
    }
    
@@ -100,16 +105,12 @@ public class NewCustomerView extends JPanel {
       bottom.add(confirmEmailLabel);
       bottom.add(confirmEmailTextField);
       panel.add(bottom);
+      panel.setBorder(BorderFactory.createTitledBorder("Email"));
       return panel;
    }
    
    private JPanel createAddressPanel() {
-      JPanel panel = new JPanel(new GridLayout(4, 0));
-      
-      JPanel houseNumPanel = new JPanel();
-      houseNumPanel.add(houseNumberLabel);
-      houseNumPanel.add(houseNumberTextField);
-      panel.add(houseNumPanel);
+      JPanel panel = new JPanel(new GridLayout(3, 0));
       
       JPanel stNamePanel = new JPanel();
       stNamePanel.add(streetNameLabel);
@@ -125,6 +126,7 @@ public class NewCustomerView extends JPanel {
       statePanel.add(stateLabel);
       statePanel.add(stateTextField);
       panel.add(statePanel);
+      panel.setBorder(BorderFactory.createTitledBorder("Address"));
       return panel;
    }
    
@@ -142,6 +144,7 @@ public class NewCustomerView extends JPanel {
       bottom.add(ccSecCodeLabel);
       bottom.add(ccSecCodeTextField);
       panel.add(bottom);
+      panel.setBorder(BorderFactory.createTitledBorder("Credit Card"));
       return panel;
    }
    
@@ -150,5 +153,25 @@ public class NewCustomerView extends JPanel {
       panel.add(cancelButton);
       panel.add(submitButton);
       return panel;
+   }
+   
+   public void addCancelButtonListener(ActionListener a) {
+      cancelButton.addActionListener(a);
+   }
+   
+   public void addSubmitButtonListener(ActionListener a) {
+      submitButton.addActionListener(a);
+   }
+
+   @Override
+   public void displayErrorMessage(String message) {
+      // TODO Auto-generated method stub
+      JOptionPane.showMessageDialog(this, message, "New Customer Error Message", JOptionPane.ERROR_MESSAGE);
+   }
+
+   @Override
+   public ViewType getViewType() {
+      // TODO Auto-generated method stub
+      return ViewType.NEW_CUSTOMER;
    }
 }

@@ -1,4 +1,5 @@
 import java.awt.GridLayout;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -6,7 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-public class LoginView extends JPanel {
+public class LoginView extends JPanel implements View {
    private static final long serialVersionUID = 2090770939931306216L;
    private JPanel mainPanel = new JPanel();
    private JLabel userLabel = new JLabel("Username");
@@ -58,6 +59,23 @@ public class LoginView extends JPanel {
       return String.valueOf(passwordField.getPassword());
    }
    
-   public JButton getLoginButton() { return loginButton; }
-   public JButton getNewCustomerButton() { return newCustomerButton; }
+   public void addLoginButtonListener(ActionListener a) {
+      loginButton.addActionListener(a);
+   }
+   
+   public void addLoginNewCustomerButtonListener(ActionListener a) {
+      newCustomerButton.addActionListener(a);
+   }
+
+   @Override
+   public void displayErrorMessage(String message) {
+      // TODO Auto-generated method stub
+      
+   }
+
+   @Override
+   public ViewType getViewType() {
+      // TODO Auto-generated method stub
+      return ViewType.LOGIN;
+   }
 }

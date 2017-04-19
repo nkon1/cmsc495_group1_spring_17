@@ -4,9 +4,9 @@ public class HotelReservationSimulator {
 
    public static void main(String[] args) {
       // TODO Auto-generated method stub
-      CustomerLoginView loginView = new CustomerLoginView();
-      NewCustomerView newCustomerView = new NewCustomerView();
+      LoginView loginView = new LoginView();
       MainView mainView = new MainView(loginView);
+      Controller controller = new Controller(new Model(), mainView);
       Hotel hotel = new Hotel();
       System.out.println(String.format("Welcome to %s!", hotel.getName()));
       System.out.println("Begin by selecting the number of rooms you'd like to request");
