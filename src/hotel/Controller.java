@@ -12,6 +12,9 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import customer.Address;
+import customer.Customer;
+
 public class Controller {
    private Model model;
    private View mainView;
@@ -28,6 +31,7 @@ public class Controller {
       // Lookup the view and add its listeners
       if(view.getViewType() == ViewType.CUSTOMER_LOGIN) {
          CustomerLoginView clv = (CustomerLoginView)view;
+         clv.addDoneButtonActionListener(new CustomerLoginDoneButtonListener(this));
          
       } else if(view.getViewType() == ViewType.NEW_CUSTOMER) {
          NewCustomerView ncv = (NewCustomerView)view;
@@ -44,6 +48,22 @@ public class Controller {
          
       } else if(view.getViewType() == ViewType.RESERVATION) {
          view = (ReservationView)view;
+      }
+   }
+   
+   private class CustomerLoginDoneButtonListener implements ActionListener {
+      private Controller controller;
+      
+      CustomerLoginDoneButtonListener(Controller controller) {
+         this.controller = controller;
+      }
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+         // TODO Auto-generated method stub
+         LoginView lv = new LoginView();
+         controller.addView(lv);
+         ((MainView) controller.mainView).setCurrentView(lv);
       }
    }
    
@@ -103,7 +123,15 @@ public class Controller {
       @Override
       public void actionPerformed(ActionEvent e) {
          // TODO Auto-generated method stub
+         String firstName = "Test";
+         String lastName = "User";
+         Address address = new Address(123, "ABC", "Baltimore", "MD");
+         Customer sampleCustomer = new Customer(firstName, lastName, address);
+         CustomerLoginView clv = new CustomerLoginView(sampleCustomer);
+         controller.addView(clv);
+         ((MainView) controller.mainView).setCurrentView(clv);
          // TODO: Check username/password in model's database
+         // TODO: Check if is an employee or customer
          // TODO: Send user to reservations
       }
    }

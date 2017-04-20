@@ -29,4 +29,22 @@ public class SuiteRoom implements Room {
       // TODO Auto-generated method stub
       return RoomType.SUITE;
    }
+
+   @Override
+   public boolean hasJacuzzi() {
+      // TODO Auto-generated method stub
+      return false;
+   }
+
+   @Override
+   public boolean hasFireplace() {
+      // TODO Auto-generated method stub
+      return false;
+   }
+
+   @Override
+   public boolean hasMicrowave() {
+      // TODO Auto-generated method stub
+      return false;
+   }
 }

@@ -1,4 +1,6 @@
 package view;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 
@@ -47,16 +49,32 @@ public class NewCustomerView extends JPanel implements View {
    private JButton cancelButton = new JButton("Cancel");
    
    public NewCustomerView() {
-      JPanel infoPanel = new JPanel(new GridLayout(3, 2));
-      infoPanel.add(createUserPanel());
-      infoPanel.add(createPasswordPanel());
-      infoPanel.add(createAddressPanel());
-      infoPanel.add(createEmailPanel());
-      infoPanel.add(createCreditCardPanel());
+      JPanel infoPanel = new JPanel(new GridBagLayout());
+      GridBagConstraints c = new GridBagConstraints();
+      c.gridx = 0;
+      c.gridy = 0;
+      c.fill = GridBagConstraints.BOTH;
+      infoPanel.add(createUserPanel(), c);
+      c.gridx = 1;
+      c.gridy = 0;
+      infoPanel.add(createPasswordPanel(), c);
+      c.gridx = 0;
+      c.gridy = 1;
+      infoPanel.add(createAddressPanel(), c);
+      c.gridx = 1;
+      c.gridy = 1;
+      infoPanel.add(createEmailPanel(), c);
+      c.gridx = 0;
+      c.gridy = 2;
+      infoPanel.add(createCreditCardPanel(), c);
       
-      mainPanel.setLayout(new GridLayout(2, 0));
-      mainPanel.add(infoPanel);
-      mainPanel.add(createSubmissionPanel());
+      mainPanel.setLayout(new GridBagLayout());
+      c.gridx = 0;
+      c.gridy = 0;
+      mainPanel.add(infoPanel, c);
+      c.gridx = 0;
+      c.gridy = 1;
+      mainPanel.add(createSubmissionPanel(), c);
       
       this.add(mainPanel);
    }

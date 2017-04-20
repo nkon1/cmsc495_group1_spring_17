@@ -4,10 +4,6 @@ public class ParadiseRoom implements Room {
    private int NUMBER_OF_BEDS = 2;
    private int NUMBER_OF_OCCUPANTS = 4;
    private double cost = 279.99;
-
-   private boolean Jacuzzi;
-   private boolean fireplace;
-   private boolean microwave;
    
    @Override
    public int getNumOfBeds() {
@@ -32,11 +28,11 @@ public class ParadiseRoom implements Room {
    }
 
    public boolean hasFireplace(){
-	    return fireplace;
+	    return true;
    }
 
    public boolean hasMicrowave(){
-	    return microwave;
+	    return true;
    }
 
    @Override

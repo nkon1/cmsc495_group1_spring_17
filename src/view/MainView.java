@@ -1,6 +1,7 @@
 package view;
-import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -13,13 +14,16 @@ public class MainView extends JFrame implements View {
 
    public MainView(JPanel currentView) {
       this.currentView = currentView;
-      currentView.setPreferredSize(new Dimension(800, 600));
       mainPanel = new JPanel();
-      //mainPanel.setLayout(new GridLayout(3, 0));
-      mainPanel.add(createTitleBar());
-      mainPanel.add(currentView);
+      mainPanel.setLayout(new GridBagLayout());
+      GridBagConstraints c = new GridBagConstraints();
+      c.gridx = 0;
+      c.gridy = 0;
+      mainPanel.add(createTitleBar(), c);
+      c.gridx = 0;
+      c.gridy = 1;
+      mainPanel.add(currentView, c);
       this.add(mainPanel);
-      this.setPreferredSize(new Dimension(800, 600));
       this.setVisible(true);
       this.pack();
       this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -37,10 +41,13 @@ public class MainView extends JFrame implements View {
    public void setCurrentView(View view) {
       mainPanel.remove(this.currentView);
       this.currentView = (JPanel)view;
-      mainPanel.add(currentView);
-      this.setPreferredSize(new Dimension(800, 600));
+      GridBagConstraints c = new GridBagConstraints();
+      c.gridx = 0;
+      c.gridy = 1;
+      mainPanel.add(currentView, c);
       this.pack();
       this.repaint();
+      this.setLocationRelativeTo(null);
    }
    public View getCurrentView() { return (View)this.currentView; }
 

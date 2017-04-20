@@ -6,7 +6,7 @@ public class Customer {
    private Address address;
    private String email;
    
-   Customer(String firstName, String lastName, Address address) {
+   public Customer(String firstName, String lastName, Address address) {
       this.firstName = firstName;
       this.lastName = lastName;
       this.address = address;
@@ -32,4 +32,8 @@ public class Customer {
    public String getLastName() { return lastName; }
    public Address getAddresss() { return address; }
    public String getEmail() { return email; }
+   
+   public String toString() {
+      return String.format("%s, %s", lastName, firstName);
+   }
 }
