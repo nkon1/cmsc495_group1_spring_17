@@ -30,8 +30,18 @@ public class Customer {
       this.email = email;
    }  //added from Pseudocode by Stefan
    
+   public void setNewCustomer(boolean newCustomer){
+       this.newCustomer=newCustomer;
+   }
+   
+   public void setExistingCustomer(boolean existingCustomer){
+       this.existingCustomer=existingCustomer;
+   }
+   
    public String getFirstName() { return firstName; }
    public String getLastName() { return lastName; }
    public Address getAddresss() { return address; }
    public String getEmail() { return email; }
+   public boolean getNewCustomer() {return newCustomer; }
+   public boolean getExistingCustomer() {return existingCustomer; }
 }
