@@ -32,6 +32,8 @@ public class Controller {
       if(view.getViewType() == ViewType.CUSTOMER_LOGIN) {
          CustomerLoginView clv = (CustomerLoginView)view;
          clv.addDoneButtonActionListener(new CustomerLoginDoneButtonListener(this));
+         // Add functionality for the make reservation button
+         // Add functionality for the view reservation button
          
       } else if(view.getViewType() == ViewType.NEW_CUSTOMER) {
          NewCustomerView ncv = (NewCustomerView)view;
