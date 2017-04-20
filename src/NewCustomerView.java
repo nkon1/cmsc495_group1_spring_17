@@ -1,5 +1,7 @@
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -149,6 +151,23 @@ public class NewCustomerView extends JPanel {
       JPanel panel = new JPanel();
       panel.add(cancelButton);
       panel.add(submitButton);
+      submitButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String firstName=firstNameTextField.getText();
+                String lastName=lastNameTextField.getText();
+                int houseNum=Integer.parseInt(houseNumberTextField.getText());
+                String street=streetNameTextField.getText();
+                String city=cityTextField.getText();
+                String state=stateTextField.getText();
+                Address address=new Address(houseNum, street, city, state);
+                Customer client=new Customer(firstName, lastName, address);
+                String email=emailTextField.getText();
+                String emailConfirmed=confirmEmailTextField.getText();
+                String password=passwordTextField.toString();
+                String passwordConfirmed=passwordTextField.toString();
+                Payment card= new Payment(Long.parseLong(ccNumberTextField.getText()), Integer.parseInt(ccExpDateTextField.getText()), client, address);
+            }
+      });
       return panel;
    }
 }
