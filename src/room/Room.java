@@ -4,4 +4,5 @@ public interface Room {
    public int getNumOfBeds();
    public int getMaxOccupants();
    public double getCost();
+   public RoomType getRoomType();
 }

@@ -23,4 +23,10 @@ public class SuiteRoom implements Room {
       // TODO Auto-generated method stub
       return cost;
    }
+
+   @Override
+   public RoomType getRoomType() {
+      // TODO Auto-generated method stub
+      return RoomType.SUITE;
+   }
 }

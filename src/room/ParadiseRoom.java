@@ -39,4 +39,10 @@ public class ParadiseRoom implements Room {
 	    return microwave;
    }
 
+   @Override
+   public RoomType getRoomType() {
+      // TODO Auto-generated method stub
+      return RoomType.PARADISE;
+   }
+
 }
