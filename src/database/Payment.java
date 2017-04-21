@@ -1,21 +1,21 @@
 package database;
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+import customer.Customer;
+import customer.Address;
 
-/**
- *
- * @author BATZ
- */
+
 public class Payment {
     
     private long accountNumber;
     private int expirationDate;
-
+    
     private Customer cardHolder;
     private Address billing;
+    
+    private enum cardType{
+        VISA, MASTERCARD, AMEX
+    }
+    
+    private cardType cardBrand;
 
     public Payment(long accountNumber, int expirationDate, Customer cardHolder, Address billing){
         this.accountNumber = accountNumber;
@@ -32,4 +32,7 @@ public class Payment {
         return expirationDate;
     }
     
+    public cardType getCardType(){
+        return cardBrand;
+    }
 }
