@@ -14,12 +14,18 @@ import java.util.List;
 
 import customer.Address;
 import customer.Customer;
+import hotel.Reservation; //imported for testing
+import hotel.Occupant;
+import java.util.Date;
+import room.ParadiseRoom;
+import room.Room;
 
 public class Controller {
    private Model model;
    private View mainView;
    private List<View> views = new ArrayList<>();
    
+
    Controller(Model model, View mainView) {
       this.model = model;
       this.mainView = mainView;
@@ -32,6 +38,7 @@ public class Controller {
       if(view.getViewType() == ViewType.CUSTOMER_LOGIN) {
          CustomerLoginView clv = (CustomerLoginView)view;
          clv.addDoneButtonActionListener(new CustomerLoginDoneButtonListener(this));
+         clv.addViewReservationButtonListener(new ViewReservationButtonListener(this));
          // Add functionality for the make reservation button
          // Add functionality for the view reservation button
          
@@ -94,6 +101,7 @@ public class Controller {
 
       @Override
       public void actionPerformed(ActionEvent e) {
+          
          // TODO Auto-generated method stub
          // TODO: Use model to write changes to database and send user back to login view
       }
@@ -112,6 +120,7 @@ public class Controller {
          NewCustomerView ncv = new NewCustomerView();
          controller.addView(ncv);
          ((MainView) controller.mainView).setCurrentView(ncv);
+         
       }
    }
    
@@ -125,16 +134,52 @@ public class Controller {
       @Override
       public void actionPerformed(ActionEvent e) {
          // TODO Auto-generated method stub
-         String firstName = "Test";
+        /* String firstName = "Test";
          String lastName = "User";
          Address address = new Address(123, "ABC", "Baltimore", "MD");
-         Customer sampleCustomer = new Customer(firstName, lastName, address);
-         CustomerLoginView clv = new CustomerLoginView(sampleCustomer);
+         Customer sampleCustomer = new Customer(firstName, lastName, address);*/
+         CustomerLoginView clv = new CustomerLoginView(createTestCustomer());
          controller.addView(clv);
          ((MainView) controller.mainView).setCurrentView(clv);
          // TODO: Check username/password in model's database
          // TODO: Check if is an employee or customer
          // TODO: Send user to reservations
       }
+   }
+   
+   public Customer createTestCustomer(){
+       String firstName = "Test";
+         String lastName = "User";
+         Address address = new Address(123, "ABC", "Baltimore", "MD");
+         Customer sampleCustomer = new Customer(firstName, lastName, address);
+         return sampleCustomer;
+   }
+   
+   private class ViewReservationButtonListener implements ActionListener {
+       private Controller controller;
+       
+       
+       
+       ViewReservationButtonListener(Controller controller) {
+           this.controller = controller;
+           
+                     
+       }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          ReservationView rv = new ReservationView();
+          Occupant testOccupant = new Occupant(createTestCustomer(), 2);
+          ParadiseRoom testRoom = new ParadiseRoom();
+          Date date = new Date();
+          Reservation testReservation = new Reservation(testOccupant, testRoom, date, 2 );
+          rv.addReservation(testReservation);
+          controller.addView(rv);
+          ((MainView) controller.mainView).setCurrentView(rv);
+          
+          System.out.println(testReservation.getOccupant().toString());
+        }
+       
+       
    }
 }
