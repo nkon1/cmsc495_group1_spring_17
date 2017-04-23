@@ -5,11 +5,12 @@ public class Customer {
    private String lastName;
    private Address address;
    private String email;
+   private String password;
    
    public Customer(String firstName, String lastName, Address address) {
       this.firstName = firstName;
       this.lastName = lastName;
-      this.address = address;
+      this.address = address;      
    }
    
    public void setFirstName(String firstName) {
@@ -28,12 +29,21 @@ public class Customer {
       this.email = email;
    }
    
+   public void setPassword(String password) {
+	   this.password = password;
+   }
+   
    public String getFirstName() { return firstName; }
    public String getLastName() { return lastName; }
    public Address getAddresss() { return address; }
    public String getEmail() { return email; }
+  public String getPassword() { return password; }
    
    public String toString() {
       return String.format("%s, %s", lastName, firstName);
    }
+
+
+
+
 }
