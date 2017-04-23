@@ -19,6 +19,7 @@ import hotel.Occupant;
 import java.util.Date;
 import room.ParadiseRoom;
 import room.Room;
+import view.MakeReservationView;
 
 public class Controller {
    private Model model;
@@ -39,6 +40,7 @@ public class Controller {
          CustomerLoginView clv = (CustomerLoginView)view;
          clv.addDoneButtonActionListener(new CustomerLoginDoneButtonListener(this));
          clv.addViewReservationButtonListener(new ViewReservationButtonListener(this));
+         clv.addMakeReservationButtonListener(new MakeReservationButtonListener(this));
          // Add functionality for the make reservation button
          // Add functionality for the view reservation button
          
@@ -57,6 +59,9 @@ public class Controller {
          
       } else if(view.getViewType() == ViewType.RESERVATION) {
          view = (ReservationView)view;
+         
+      } else if(view.getViewType() == ViewType.RESERVATION_VIEW) {
+          view = (MakeReservationView)view;
       }
    }
    
@@ -155,6 +160,14 @@ public class Controller {
          return sampleCustomer;
    }
    
+   public Reservation createTestReservation(){
+          Occupant testOccupant = new Occupant(createTestCustomer(), 2);
+          ParadiseRoom testRoom = new ParadiseRoom();
+          Date date = new Date();
+          Reservation testReservation = new Reservation(testOccupant, testRoom, date, 2 );
+          return testReservation;
+   }
+   
    private class ViewReservationButtonListener implements ActionListener {
        private Controller controller;
        
@@ -169,17 +182,36 @@ public class Controller {
         @Override
         public void actionPerformed(ActionEvent e) {
           ReservationView rv = new ReservationView();
-          Occupant testOccupant = new Occupant(createTestCustomer(), 2);
-          ParadiseRoom testRoom = new ParadiseRoom();
-          Date date = new Date();
-          Reservation testReservation = new Reservation(testOccupant, testRoom, date, 2 );
-          rv.addReservation(testReservation);
+          rv.addReservation(createTestReservation());
           controller.addView(rv);
           ((MainView) controller.mainView).setCurrentView(rv);
+          System.out.println(rv.getViewType().toString());
           
-          System.out.println(testReservation.getOccupant().toString());
         }
        
        
    }
+   
+   private class MakeReservationButtonListener implements ActionListener {
+        private Controller controller;
+        
+        
+        MakeReservationButtonListener(Controller controller) {
+            this.controller = controller;
+            
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+           Customer testCustomer = createTestCustomer();
+           Occupant testOccupant = new Occupant(testCustomer, 2);
+           MakeReservationView mrv = new MakeReservationView(testOccupant);
+          
+           controller.addView(mrv);
+          ((MainView) controller.mainView).setCurrentView(mrv);
+        }
+    }
+       
+       
+   
 }
