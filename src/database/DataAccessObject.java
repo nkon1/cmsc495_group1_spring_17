@@ -6,7 +6,11 @@ import java.security.spec.InvalidKeySpecException;
 import customer.Customer;
 
 public interface DataAccessObject {
-	
+	/** TODO: add insertPaymentInfo method
+	 * 		  add getCustomerFromDatabase()
+	 * 		  add ReservationToDatabase(Reservation reservation)
+	 *        add getReservationFromDatabase()
+	 */
 	
 	/**
 	 * Access to the database to add a customer to the database.

@@ -13,7 +13,12 @@ import javax.crypto.spec.PBEKeySpec;
 import java.sql.*;
 
 public class DataAccessObjectImpl implements DataAccessObject {
-
+	/** TODO: add insertPaymentInfo method
+	 * 		  add getCustomerFromDatabase()
+	 * 		  add ReservationToDatabase(Reservation reservation)
+	 *        add getReservationFromDatabase()
+	 */
+	
 	@Override
 	public boolean addCustomerToDatabase(Customer customer, Payment payment) {
         try {
