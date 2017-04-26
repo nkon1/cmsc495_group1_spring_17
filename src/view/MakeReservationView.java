@@ -16,10 +16,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-/**
- *
- * @author BATZ
- */
 public class MakeReservationView extends JPanel implements View {
    private static final long serialVersionUID = 1944212264480093931L;
    
@@ -31,7 +27,6 @@ public class MakeReservationView extends JPanel implements View {
    }
    
     private void makeReservationView(Occupant occupant) {
-       Reservation reservation;
        JPanel panel = new JPanel(new GridLayout(3, 0));
        JPanel top = new JPanel();
        JPanel center = new JPanel();
@@ -46,7 +41,7 @@ public class MakeReservationView extends JPanel implements View {
        JLabel stay = new JLabel("How many nights stay?");
        
        String[] roomTypes = new String[]{"Studio Room", "Suite Room", "Paradise Room"};
-       JComboBox room = new JComboBox(roomTypes);
+       JComboBox<String> room = new JComboBox<String>(roomTypes);
        JFormattedTextField dateField = new JFormattedTextField(new SimpleDateFormat("MM/dd/yyyy"));
        JTextField lengthOfStay = new JTextField("Length Of Stay");
        
@@ -60,8 +55,6 @@ public class MakeReservationView extends JPanel implements View {
        panel.add(top);
        panel.add(center);
        panel.add(bottom);
-      
-       //return reservation;
    }
 
 

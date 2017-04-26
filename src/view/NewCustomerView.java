@@ -19,7 +19,7 @@ public class NewCustomerView extends JPanel implements View {
    // User panel labels
    private JLabel firstNameLabel = new JLabel("First Name");
    private JLabel lastNameLabel = new JLabel("Last Name");
-   private JLabel streetNameLabel = new JLabel("Address");
+   private JLabel streetNameLabel = new JLabel("Street");
    private JLabel cityLabel = new JLabel("City");
    private JLabel stateLabel = new JLabel("State");
    private JLabel emailLabel = new JLabel("Email");

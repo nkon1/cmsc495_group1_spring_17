@@ -5,6 +5,7 @@ import view.MainView;
 import view.ViewType;
 import view.CustomerLoginView;
 import view.ReservationView;
+import view.SelectRoomView;
 import view.NewCustomerView;
 import view.EmployeeLoginView;
 import java.awt.event.ActionEvent;
@@ -19,6 +20,8 @@ import hotel.Occupant;
 import java.util.Date;
 import room.ParadiseRoom;
 import room.Room;
+import room.StudioRoom;
+import room.SuiteRoom;
 import view.MakeReservationView;
 
 public class Controller {
@@ -139,10 +142,6 @@ public class Controller {
       @Override
       public void actionPerformed(ActionEvent e) {
          // TODO Auto-generated method stub
-        /* String firstName = "Test";
-         String lastName = "User";
-         Address address = new Address(123, "ABC", "Baltimore", "MD");
-         Customer sampleCustomer = new Customer(firstName, lastName, address);*/
          CustomerLoginView clv = new CustomerLoginView(createTestCustomer());
          controller.addView(clv);
          ((MainView) controller.mainView).setCurrentView(clv);
@@ -166,6 +165,17 @@ public class Controller {
           Date date = new Date();
           Reservation testReservation = new Reservation(testOccupant, testRoom, date, 2 );
           return testReservation;
+   }
+   
+   public List<Room> createTestRooms() {
+      ParadiseRoom pRoom = new ParadiseRoom();
+      StudioRoom studioRoom = new StudioRoom();
+      SuiteRoom suiteRoom = new SuiteRoom();
+      List<Room> rooms = new ArrayList<>();
+      rooms.add(pRoom);
+      rooms.add(suiteRoom);
+      rooms.add(studioRoom);
+      return rooms;
    }
    
    private class ViewReservationButtonListener implements ActionListener {
@@ -203,12 +213,15 @@ public class Controller {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+           /*
            Customer testCustomer = createTestCustomer();
            Occupant testOccupant = new Occupant(testCustomer, 2);
            MakeReservationView mrv = new MakeReservationView(testOccupant);
+           */
           
-           controller.addView(mrv);
-          ((MainView) controller.mainView).setCurrentView(mrv);
+           SelectRoomView srv = new SelectRoomView(createTestRooms());
+           controller.addView(srv);
+          ((MainView) controller.mainView).setCurrentView(srv);
         }
     }
        
