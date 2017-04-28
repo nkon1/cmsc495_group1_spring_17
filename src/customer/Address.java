@@ -1,36 +1,39 @@
 package customer;
+/** Edited 04/28/2016 by Tiff, combined house number & street
+ *      Added zip variable and methods
+ */
 
 public class Address {
-   private int houseNumber;
-   private String streetName;
-   private String city;
-   private String state;
+   private static String streetAddress;
+   private static String city;
+   private static String state;
+   private static int zip;
    
-   public Address(int houseNumber, String streetName, String city, String state) {
-      this.houseNumber = houseNumber;
-      this.streetName = streetName;
+   public Address(String streetAddress, String city, String state, int zip) {
+      this.streetAddress = streetAddress;
       this.city = city;
       this.state = state;
+      this.zip = zip;
+   }
+      
+   public static void setStreetAddress(String streetAddress) {
+      Address.streetAddress = streetAddress;
    }
    
-   public void setHouseNumber(int houseNumber) {
-      this.houseNumber = houseNumber;
+   public static void setCity(String city) {
+      Address.city = city;
    }
    
-   public void setStreetName(String streetName) {
-      this.streetName = streetName;
+   public static void setState(String state) {
+      Address.state = state;
    }
    
-   public void setCity(String city) {
-      this.city = city;
+   public static void setZip(int zip) {
+	   Address.zip= zip;
    }
    
-   public void setState(String state) {
-      this.state = state;
-   }
-   
-   public int getHouseNumber() { return houseNumber; }
-   public String getStreetName() { return streetName; }
+   public String getStreetAddress() { return streetAddress; }
    public String getCity() { return city; }
    public String getState() { return state; }
+   public int getZip() { return zip; }
 }

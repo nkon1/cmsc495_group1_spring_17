@@ -1,25 +1,27 @@
 package database;
+import java.util.Date;
+
 import customer.Customer;
 import customer.Address;
 
 
 public class Payment {
     
-    private long accountNumber;
-    private int expirationDate;
+    private static long accountNumber;
+    private static Date expirationDate;
     
     private Customer cardHolder;
     private Address billing;
     
-    private enum cardType{
+    public enum cardType{
         VISA, MASTERCARD, AMEX
     }
     
-    private cardType cardBrand;
+    private static cardType cardBrand;
 
-    public Payment(long accountNumber, int expirationDate, Customer cardHolder, Address billing){
-        this.accountNumber = accountNumber;
-        this.expirationDate = expirationDate;
+    public Payment(long cardNumber, Date expireDate, Customer cardHolder, Address billing){
+        Payment.accountNumber = cardNumber;
+        this.expirationDate = expireDate;
         this.cardHolder = cardHolder;
         this.billing = billing;
     }
@@ -28,11 +30,20 @@ public class Payment {
         return accountNumber;
     }
 
-    public int getExp(){
+    public static Date getExp(){
         return expirationDate;
     }
     
     public cardType getCardType(){
         return cardBrand;
     }
+    
+    public Address getBillingAddress() {
+    	return billing;
+    }
+    
+    public Customer getCardHolder() {
+    	return cardHolder;
+    }
+    
 }
