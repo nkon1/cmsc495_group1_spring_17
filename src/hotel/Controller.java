@@ -3,15 +3,19 @@ import view.View;
 import view.LoginView;
 import view.MainView;
 import view.ViewType;
-import view.CustomerLoginView;
+import view.StarterView;
 import view.ReservationView;
 import view.SelectRoomView;
 import view.NewCustomerView;
+import view.DetailsView;
 import view.EmployeeLoginView;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.JButton;
 
 import customer.Address;
 import customer.Customer;
@@ -22,7 +26,6 @@ import room.ParadiseRoom;
 import room.Room;
 import room.StudioRoom;
 import room.SuiteRoom;
-import view.MakeReservationView;
 
 public class Controller {
    private Model model;
@@ -33,19 +36,17 @@ public class Controller {
    Controller(Model model, View mainView) {
       this.model = model;
       this.mainView = mainView;
-      addView(((MainView)mainView).getCurrentView());
+      setView(((MainView)mainView).getCurrentView());
    }
    
-   public void addView(View view) {
+   public void setView(View view) {
       views.add(view);
       // Lookup the view and add its listeners
-      if(view.getViewType() == ViewType.CUSTOMER_LOGIN) {
-         CustomerLoginView clv = (CustomerLoginView)view;
-         clv.addDoneButtonActionListener(new CustomerLoginDoneButtonListener(this));
-         clv.addViewReservationButtonListener(new ViewReservationButtonListener(this));
-         clv.addMakeReservationButtonListener(new MakeReservationButtonListener(this));
-         // Add functionality for the make reservation button
-         // Add functionality for the view reservation button
+      if(view.getViewType() == ViewType.STARTER) {
+         StarterView starterView = (StarterView)view;
+         starterView.addDoneButtonActionListener(new CustomerLoginDoneButtonListener(this));
+         starterView.addViewReservationButtonListener(new ViewReservationButtonListener(this));
+         starterView.addMakeReservationButtonListener(new MakeReservationButtonListener(this));
          
       } else if(view.getViewType() == ViewType.NEW_CUSTOMER) {
          NewCustomerView ncv = (NewCustomerView)view;
@@ -60,11 +61,18 @@ public class Controller {
          lv.addLoginNewCustomerButtonListener(new LoginNewCustomerButtonListener(this));
          lv.addLoginButtonListener(new LoginButtonListener(this));
          
+      } else if(view.getViewType() == ViewType.SELECT_ROOM) {
+         SelectRoomView srv = (SelectRoomView)view;
+         for(JButton button : srv.getSelectionButtons()) {
+            srv.addSelectRoomActionListener(button, new SelectRoomListener(this));
+         }
+         
       } else if(view.getViewType() == ViewType.RESERVATION) {
          view = (ReservationView)view;
          
-      } else if(view.getViewType() == ViewType.RESERVATION_VIEW) {
-          view = (MakeReservationView)view;
+      } else if(view.getViewType() == ViewType.DETAILS) {
+         DetailsView dv = (DetailsView)view;
+         dv.addNextButtonActionListener(new DetailsViewListener(this));
       }
    }
    
@@ -79,7 +87,7 @@ public class Controller {
       public void actionPerformed(ActionEvent e) {
          // TODO Auto-generated method stub
          LoginView lv = new LoginView();
-         controller.addView(lv);
+         controller.setView(lv);
          ((MainView) controller.mainView).setCurrentView(lv);
       }
    }
@@ -95,7 +103,7 @@ public class Controller {
       public void actionPerformed(ActionEvent e) {
          // TODO Auto-generated method stub
          LoginView lv = new LoginView();
-         controller.addView(lv);
+         controller.setView(lv);
          ((MainView) controller.mainView).setCurrentView(lv);
       }
    }
@@ -126,7 +134,7 @@ public class Controller {
       public void actionPerformed(ActionEvent e) {
          // TODO Auto-generated method stub
          NewCustomerView ncv = new NewCustomerView();
-         controller.addView(ncv);
+         controller.setView(ncv);
          ((MainView) controller.mainView).setCurrentView(ncv);
          
       }
@@ -142,16 +150,80 @@ public class Controller {
       @Override
       public void actionPerformed(ActionEvent e) {
          // TODO Auto-generated method stub
-         CustomerLoginView clv = new CustomerLoginView(createTestCustomer());
-         controller.addView(clv);
-         ((MainView) controller.mainView).setCurrentView(clv);
          // TODO: Check username/password in model's database
          // TODO: Check if is an employee or customer
          // TODO: Send user to reservations
       }
    }
    
-   public Customer createTestCustomer(){
+   private class ViewReservationButtonListener implements ActionListener {
+       private Controller controller;
+       
+       ViewReservationButtonListener(Controller controller) {
+           this.controller = controller;
+       }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+           LoginView lv = new LoginView();
+           lv.getNewCustomerButton().setEnabled(false);
+           controller.setView(lv);
+          ((MainView) controller.mainView).setCurrentView(lv);
+          
+        }
+   }
+   
+   private class MakeReservationButtonListener implements ActionListener {
+        private Controller controller;
+        
+        MakeReservationButtonListener(Controller controller) {
+            this.controller = controller;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+           SelectRoomView srv = new SelectRoomView(createTestRooms());
+           controller.setView(srv);
+          ((MainView) controller.mainView).setCurrentView(srv);
+        }
+    }
+       
+    private class SelectRoomListener implements ActionListener {
+      private Controller controller;
+       
+      SelectRoomListener(Controller controller) {
+         this.controller = controller;
+      }
+       
+      @Override
+      public void actionPerformed(ActionEvent e) {
+         // TODO Auto-generated method stub
+         Room tempRoom = new ParadiseRoom();
+         DetailsView dv = new DetailsView(tempRoom);
+         controller.setView(dv);
+         ((MainView) controller.mainView).setCurrentView(dv);
+      }
+       
+    }
+    
+    private class DetailsViewListener implements ActionListener {
+       private Controller controller;
+       
+       DetailsViewListener(Controller controller) {
+          this.controller = controller;
+       }
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+         // TODO Auto-generated method stub
+         LoginView lv = new LoginView();
+         controller.setView(lv);
+         ((MainView) controller.mainView).setCurrentView(lv);
+      }
+       
+    }
+    
+    public Customer createTestCustomer(){
        String firstName = "Test";
          String lastName = "User";
          Address address = new Address(123, "ABC", "Baltimore", "MD");
@@ -177,54 +249,5 @@ public class Controller {
       rooms.add(studioRoom);
       return rooms;
    }
-   
-   private class ViewReservationButtonListener implements ActionListener {
-       private Controller controller;
-       
-       
-       
-       ViewReservationButtonListener(Controller controller) {
-           this.controller = controller;
-           
-                     
-       }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          ReservationView rv = new ReservationView();
-          rv.addReservation(createTestReservation());
-          controller.addView(rv);
-          ((MainView) controller.mainView).setCurrentView(rv);
-          System.out.println(rv.getViewType().toString());
-          
-        }
-       
-       
-   }
-   
-   private class MakeReservationButtonListener implements ActionListener {
-        private Controller controller;
-        
-        
-        MakeReservationButtonListener(Controller controller) {
-            this.controller = controller;
-            
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-           /*
-           Customer testCustomer = createTestCustomer();
-           Occupant testOccupant = new Occupant(testCustomer, 2);
-           MakeReservationView mrv = new MakeReservationView(testOccupant);
-           */
-          
-           SelectRoomView srv = new SelectRoomView(createTestRooms());
-           controller.addView(srv);
-          ((MainView) controller.mainView).setCurrentView(srv);
-        }
-    }
-       
-       
    
 }

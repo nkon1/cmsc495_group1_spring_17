@@ -1,15 +1,16 @@
 package hotel;
-import view.View;
 import view.LoginView;
 import view.MainView;
+import view.StarterView;
+
 import java.util.Scanner;
 
 public class HotelReservationSimulator {
 
    public static void main(String[] args) {
       // TODO Auto-generated method stub
-      LoginView loginView = new LoginView();
-      MainView mainView = new MainView(loginView);
+      StarterView sv = new StarterView();
+      MainView mainView = new MainView(sv);
       Controller controller = new Controller(new Model(), mainView);
       Hotel hotel = new Hotel();
       System.out.println(String.format("Welcome to %s!", hotel.getName()));

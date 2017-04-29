@@ -4,6 +4,8 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -11,13 +13,13 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import javafx.geometry.Insets;
 import room.Room;
 import room.RoomType;
 
 public class SelectRoomView extends JPanel implements View {
    private static final long serialVersionUID = -3973966279112037065L;
    private List<Room> rooms;
+   private List<JButton> selectionButtons = new ArrayList<>();
    
    public SelectRoomView(List<Room> rooms) {
       this.rooms = rooms;
@@ -77,7 +79,10 @@ public class SelectRoomView extends JPanel implements View {
       c.gridy = 2;
       JPanel buttonPanel = new JPanel();
       JButton selectionButton = new JButton("Select");
-      buttonPanel.add(selectionButton, c);
+      selectionButtons.add(selectionButton);
+      buttonPanel.add(selectionButton);
+      
+      panel.add(buttonPanel, c);
       
       return panel;
    }
@@ -91,6 +96,10 @@ public class SelectRoomView extends JPanel implements View {
       return count;
    }
    
+   public void addSelectRoomActionListener(JButton button, ActionListener a) {
+        button.addActionListener(a);
+   }
+   
    @Override
    public void displayErrorMessage(String message) {
       // TODO Auto-generated method stub
@@ -100,7 +109,11 @@ public class SelectRoomView extends JPanel implements View {
    @Override
    public ViewType getViewType() {
       // TODO Auto-generated method stub
-      return null;
+      return ViewType.SELECT_ROOM;
+   }
+   
+   public List<JButton> getSelectionButtons() {
+      return selectionButtons;
    }
 
 }

@@ -5,40 +5,25 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import customer.Customer;
 
-public class CustomerLoginView extends JPanel implements View {
+public class StarterView extends JPanel implements View {
    private static final long serialVersionUID = -5943835410263850923L;
-   private Customer customer;
    private JButton makeRervationButton = new JButton("Make Reservation");
    private JButton viewReservationButton = new JButton("View Reservation");
    private JButton doneButton = new JButton("Done");
    
-   public CustomerLoginView(Customer customer) {
-      this.customer = customer;
+   public StarterView() {
       JPanel mainPanel = new JPanel(new GridBagLayout());
       GridBagConstraints c = new GridBagConstraints();
-      c.gridx = 0;
-      c.gridy = 0;
-      c.gridwidth = 2;
-      mainPanel.add(createCustomerWelcome(), c);
       c.gridwidth = 1;
       c.gridx = 0;
-      c.gridy = 1;
+      c.gridy = 0;
       mainPanel.add(createMakeReservation(), c);
       c.gridx = 1;
-      c.gridy = 1;
+      c.gridy = 0;
       mainPanel.add(createViewReservation(), c);
       this.add(mainPanel);
-   }
-   
-   private JPanel createCustomerWelcome() {
-      JPanel panel = new JPanel();
-      JLabel welcomeLabel = new JLabel(String.format("Welcome %s!", customer.toString()));
-      panel.add(welcomeLabel);
-      return panel;
    }
    
    private JPanel createMakeReservation() {
@@ -74,7 +59,7 @@ public class CustomerLoginView extends JPanel implements View {
    @Override
    public ViewType getViewType() {
       // TODO Auto-generated method stub
-      return ViewType.CUSTOMER_LOGIN;
+      return ViewType.STARTER;
    }
 
 }

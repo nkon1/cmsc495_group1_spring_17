@@ -79,4 +79,12 @@ public class LoginView extends JPanel implements View {
       // TODO Auto-generated method stub
       return ViewType.LOGIN;
    }
+   
+   public JButton getLoginButton() {
+      return loginButton;
+   }
+   
+   public JButton getNewCustomerButton() {
+      return newCustomerButton;
+   }
 }
