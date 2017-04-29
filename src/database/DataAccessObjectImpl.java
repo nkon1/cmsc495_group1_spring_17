@@ -128,7 +128,7 @@ public class DataAccessObjectImpl implements DataAccessObject {
 			String cardHolderName = payment.getCardHolder().getFirstName() + " " +
 					payment.getCardHolder().getLastName();
 			cardType cardType = payment.getCardType();
-			long cardNumber = payment.getAccount();
+			String cardNumber = payment.getAccount();
 			Date expireDate = (Date) Payment.getExp();
 			String billingAddress1 = payment.getBillingAddress().getStreetAddress();
 			String billingCity = payment.getBillingAddress().getCity();
@@ -142,7 +142,7 @@ public class DataAccessObjectImpl implements DataAccessObject {
             pstmt.setString(1, user_email);
             pstmt.setString(2, cardHolderName);
             pstmt.setString(3, cardType.name());
-            pstmt.setLong(4, cardNumber);
+            pstmt.setString(4, cardNumber);
             pstmt.setDate(5, expireDate);
             pstmt.setString(6, billingAddress1);
             pstmt.setString(7, billingCity);
