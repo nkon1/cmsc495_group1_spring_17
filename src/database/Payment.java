@@ -7,7 +7,7 @@ import customer.Address;
 
 public class Payment {
     
-    private static long accountNumber;
+    private static String accountNumber;
     private static Date expirationDate;
     
     private Customer cardHolder;
@@ -19,14 +19,14 @@ public class Payment {
     
     private static cardType cardBrand;
 
-    public Payment(long cardNumber, Date expireDate, Customer cardHolder, Address billing){
-        Payment.accountNumber = cardNumber;
+    public Payment(String cardNumber, Date expireDate, Customer cardHolder, Address billing){
+        this.accountNumber = cardNumber;
         this.expirationDate = expireDate;
         this.cardHolder = cardHolder;
         this.billing = billing;
     }
 
-    public long getAccount(){
+    public String getAccount(){
         return accountNumber;
     }
 
