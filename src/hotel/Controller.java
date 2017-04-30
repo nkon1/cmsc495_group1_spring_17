@@ -19,6 +19,7 @@ import javax.swing.JButton;
 
 import customer.Address;
 import customer.Customer;
+import database.Payment;
 import hotel.Reservation; //imported for testing
 import hotel.Occupant;
 import java.util.Date;
@@ -226,7 +227,7 @@ public class Controller {
     public Customer createTestCustomer(){
        String firstName = "Test";
          String lastName = "User";
-         Address address = new Address(123, "ABC", "Baltimore", "MD");
+         Address address = new Address("ABC", "Baltimore", "MD", 123);
          Customer sampleCustomer = new Customer(firstName, lastName, address);
          return sampleCustomer;
    }
@@ -234,8 +235,9 @@ public class Controller {
    public Reservation createTestReservation(){
           Occupant testOccupant = new Occupant(createTestCustomer(), 2);
           ParadiseRoom testRoom = new ParadiseRoom();
+          Payment testPay = new Payment("9999 9999 9999 9999", new Date(), createTestCustomer(), createTestCustomer().getAddresss());
           Date date = new Date();
-          Reservation testReservation = new Reservation(testOccupant, testRoom, date, 2 );
+          Reservation testReservation = new Reservation(testOccupant, testRoom, testPay, date, 2 );
           return testReservation;
    }
    

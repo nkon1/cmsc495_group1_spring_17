@@ -9,23 +9,26 @@ import hotel.Reservation;
 public class ReservationView extends JPanel implements View {
    private static final long serialVersionUID = 1944212264480093931L;
    
-   private JScrollPane mainViewScrollPane;
+   private JPanel mainViewScrollPane;
    
    public ReservationView() {
       mainViewScrollPane = createReservationsView();
       this.add(mainViewScrollPane);
    }
    
-   private JScrollPane createReservationsView() {
-      JPanel panel = new JPanel();
-      JScrollPane scrollPane = new JScrollPane(panel);
-      panel.setBorder(BorderFactory.createTitledBorder("Reservations"));
+   private JPanel createReservationsView() {
+      //JPanel panel = new JPanel();
+      JPanel scrollPane = new JPanel();
+      
+      scrollPane.setBorder(BorderFactory.createTitledBorder("Reservations"));
+      
       return scrollPane;
    }
    
    private void addReservationView(Reservation reservation) {
-      JPanel panel = new JPanel();
-      panel.setBorder(BorderFactory.createTitledBorder("Reservation"));
+      
+      mainViewScrollPane.setBorder(BorderFactory.createTitledBorder("Reservation"));
+      mainViewScrollPane.setSize(500, 500);
       
       JLabel roomLabel = new JLabel(String.format("Room: %s", reservation.getRoom().getRoomType()));
       JLabel dateLabel = new JLabel(String.format("Date: %s", reservation.getDate()));
@@ -33,13 +36,16 @@ public class ReservationView extends JPanel implements View {
       JLabel guestsLabel = new JLabel(String.format("Guests %d:", reservation.getOccupant().getNumOfGuests())); 
       JLabel costLabel = new JLabel(String.format("Cost: %.2f", reservation.getCost()));
       
-      panel.add(roomLabel);
-      panel.add(dateLabel);
-      panel.add(nightsLabel);
-      panel.add(guestsLabel);
-      panel.add(costLabel);
-      
-      mainViewScrollPane.add(panel);
+      mainViewScrollPane.add(roomLabel);
+      mainViewScrollPane.add(dateLabel);
+      mainViewScrollPane.add(nightsLabel);
+      mainViewScrollPane.add(guestsLabel);
+      mainViewScrollPane.add(costLabel);
+      JScrollPane scroller = new JScrollPane(mainViewScrollPane);
+      this.add(scroller);
+      //mainViewScrollPane.add(panel);
+      //this.add(mainViewScrollPane);
+      System.out.println("here");
    }
 
    public void addReservation(Reservation reservation) {

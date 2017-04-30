@@ -2,13 +2,22 @@ package database;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-
+import java.sql.Connection;
+import java.sql.SQLException;
 import customer.Customer;
 
+/** Created 04/23/2016 by Tiff 
+ *     	-addCustomerToDatabase()
+ *     	-createSalt()
+ *     	-getEncryptedPassword()
+ *  Edited 04/28/2016 by Tiff
+ *  	-getCustomerFromDatabase()
+ *  	-addPaymentToDatabase()
+ *  	-getConnection()
+ */
+
 public interface DataAccessObject {
-	/** TODO: add insertPaymentInfo method
-	 * 		  add getCustomerFromDatabase()
-	 * 		  add ReservationToDatabase(Reservation reservation)
+	/** TODO: add ReservationToDatabase(Reservation reservation)
 	 *        add getReservationFromDatabase()
 	 */
 	
@@ -16,9 +25,15 @@ public interface DataAccessObject {
 	 * Access to the database to add a customer to the database.
 	 * @param customer The customer object
 	 * @param payment The payment object
-	 * @return success If the operation was successful.
+	 * @return success If the customer insertion was successful.
 	 */
-	public boolean addCustomerToDatabase(Customer customer, Payment payment);
+	public boolean addCustomerToDatabase(Customer customer);
+	
+	/**
+	 * @param payment The payment object
+	 * @return success If payment insertion was successful
+	 */
+	public boolean addPaymentToDatabase(Payment payment);
 	
 	/**
 	 * 
@@ -37,6 +52,17 @@ public interface DataAccessObject {
      */
 	public byte[] getEncryptedPassword(String password, byte[] salt) 
 			throws NoSuchAlgorithmException, InvalidKeySpecException;
+	
+	/**
+	 * 
+	 * @return connection to database
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
+	public static Connection getConnection() throws ClassNotFoundException, SQLException {
+		return null;
+	}
 
+	
 
 }
