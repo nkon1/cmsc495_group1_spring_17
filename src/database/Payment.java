@@ -9,6 +9,7 @@ public class Payment {
     
     private static String accountNumber;
     private static Date expirationDate;
+    private static String securityNum;
     
     private Customer cardHolder;
     private Address billing;
@@ -19,11 +20,12 @@ public class Payment {
     
     private static cardType cardBrand;
 
-    public Payment(String cardNumber, Date expireDate, Customer cardHolder, Address billing){
+    public Payment(String cardNumber, Date expireDate, Customer cardHolder, Address billing, String securityNum){
         this.accountNumber = cardNumber;
         this.expirationDate = expireDate;
         this.cardHolder = cardHolder;
         this.billing = billing;
+        this.securityNum = securityNum;
     }
 
     public String getAccount(){
