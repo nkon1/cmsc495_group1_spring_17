@@ -1,10 +1,14 @@
 package hotel;
 import java.util.Date;
 
+
 /** Created by:
  *  Edited 04/28/2017 by Tiff
  *  	-Added payment to Reservation constructor
  *  	-Added payment methods
+ *  Edited 04/30/2017 by Tiff
+ *  	-added blank constructor
+ *  	-added getters
  */
 
 import database.Payment;
@@ -17,6 +21,11 @@ public class Reservation {
    private Date date;
    private int numOfNights = 0;
    private double cost = 0;
+   private int bookingID;
+   
+   public Reservation() {
+	   
+   }
   
    public Reservation(Occupant occupant, Room room, Payment payment, Date date, int numOfNights) {
       this.occupant = occupant;
@@ -25,6 +34,10 @@ public class Reservation {
       this.date = date;
       this.numOfNights = numOfNights;
       cost = calculateCost();
+   }
+   
+   public void setBookingID(int bookingID) {
+	   this.bookingID = bookingID;
    }
    
    public void setOccupant(Occupant occupant) {
@@ -47,7 +60,11 @@ public class Reservation {
       this.numOfNights = numOfNights;
    }
    
-   private double calculateCost() {
+   public void setCost(double cost) {
+	   this.cost = cost;
+   }
+   
+   public double calculateCost() {
       cost = room.getCost() * numOfNights;
       return cost;
    }
