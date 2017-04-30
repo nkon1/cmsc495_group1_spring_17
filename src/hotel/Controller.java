@@ -51,6 +51,7 @@ public class Controller {
       } else if(view.getViewType() == ViewType.NEW_CUSTOMER) {
          NewCustomerView ncv = (NewCustomerView)view;
          ncv.addCancelButtonListener(new NewCustomerCancelButtonListener(this));
+         this.toString();
          ncv.addSubmitButtonListener(new NewCustomerSubmitButtonListener(this));
          
       } else if(view.getViewType() == ViewType.EMPLOYEE_LOGIN) {
@@ -110,7 +111,12 @@ public class Controller {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-          
+        
+          NewCustomerView ncv = (NewCustomerView) controller.mainView;
+          Address address = new Address(ncv.getStreet(),ncv.getCity(), ncv.getState(), ncv.getZipCode());
+          Customer newUser = new Customer(ncv.getFirstName(), ncv.getLastName(), ncv.getPassword(), address, ncv.getEmail());
+          Payment payment = new Payment(ncv.getCCnumber(), ncv.getExpiration(), newUser, address, ncv.getSecCode());
+  //      Customer newUser = new Customer(controller.  
          // TODO Auto-generated method stub
          // TODO: Use model to write changes to database and send user back to login view
       }
@@ -163,7 +169,7 @@ public class Controller {
    public Reservation createTestReservation(){
           Occupant testOccupant = new Occupant(createTestCustomer(), 2);
           ParadiseRoom testRoom = new ParadiseRoom();
-          Payment testPay = new Payment("9999 9999 9999 9999", new Date(), createTestCustomer(), createTestCustomer().getAddresss());
+          Payment testPay = new Payment("9999 9999 9999 9999", new Date(), createTestCustomer(), createTestCustomer().getAddresss(), "111");
           Date date = new Date();
           Reservation testReservation = new Reservation(testOccupant, testRoom, testPay, date, 2 );
           return testReservation;
