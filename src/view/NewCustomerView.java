@@ -3,6 +3,10 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.swing.BorderFactory;
@@ -195,9 +199,9 @@ public class NewCustomerView extends JPanel implements View {
        return lastNameTextField.getText();
    }
    
-   public String getPassword(){
-       if (passwordTextField.getPassword().equals(passwordTextField.getPassword())){
-       return passwordTextField.getText();
+   public char[] getPassword(){
+       if (Arrays.equals(passwordTextField.getPassword(), confirmPasswordTextField.getPassword())){
+       return passwordTextField.getPassword();
        }
        else {
              displayErrorMessage("Password mismatch"); 
@@ -235,8 +239,11 @@ public class NewCustomerView extends JPanel implements View {
        return ccNumberTextField.getText();
    }
    
-   public Date getExpiration(){
-       return new Date(ccExpDateTextField.getText());
+   public Date getExpiration() throws ParseException{
+       SimpleDateFormat exp = new SimpleDateFormat("MMyy");
+       exp.setLenient(false);
+       Date expiry = exp.parse(ccExpDateTextField.getText());
+       return expiry;
    }
    
    public String getSecCode(){
