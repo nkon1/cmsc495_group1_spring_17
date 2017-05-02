@@ -22,8 +22,11 @@ import database.DataAccessObjectImpl;
 import database.Payment;
 import hotel.Reservation; //imported for testing
 import hotel.Occupant;
+import java.text.ParseException;
 
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import room.ParadiseRoom;
 import room.Room;
@@ -68,7 +71,7 @@ public class Controller {
 					this));
 			this.toString();
 			ncv.addSubmitButtonListener(new NewCustomerSubmitButtonListener(
-					this));
+					this,ncv));
 
 		} else if (view.getViewType() == ViewType.EMPLOYEE_LOGIN) {
 			view = (EmployeeLoginView) view;
@@ -121,26 +124,34 @@ public class Controller {
 
 	private class NewCustomerSubmitButtonListener implements ActionListener {
 		private Controller controller;
+                private NewCustomerView ncv;
 
-		NewCustomerSubmitButtonListener(Controller controller) {
+		NewCustomerSubmitButtonListener(Controller controller, NewCustomerView ncv) {
 			this.controller = controller;
+                        this.ncv = ncv;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
-			NewCustomerView ncv = (NewCustomerView) controller.mainView;
+			//NewCustomerView ncv = (NewCustomerView) controller.mainView;
 			Address address = new Address(ncv.getStreet(), ncv.getCity(),
 					ncv.getState(), ncv.getZipCode());
 			Customer newUser = new Customer(ncv.getFirstName(),
 					ncv.getLastName(), ncv.getPassword(), ncv.getEmail());
-			Payment payment = new Payment(ncv.getCCnumber(),
-					ncv.getExpiration(), newUser, address, ncv.getSecCode());
+                        
+                    try {
+                        Payment payment = new Payment(ncv.getCCnumber(),
+                                ncv.getExpiration(), newUser, address, ncv.getSecCode());
+                        dao.addPaymentToDatabase(payment);
+                    } catch (ParseException ex) {
+                        ncv.displayErrorMessage("Invalid Credit Card Expiration Date. Please enter MMYY");
+                    }
 
 			// Submit all this data to the database
 			dao.addCustomerToDatabase(newUser);
-			dao.addPaymentToDatabase(payment);
-
+			//dao.addPaymentToDatabase(payment); //code line is hidden from try statement
+System.out.println(ncv.toString());
 		}
 	}
 
@@ -183,7 +194,7 @@ public class Controller {
 	public Customer createTestCustomer() {
 		String firstName = "Test";
 		String lastName = "User";
-		String password = "password";
+		char[] password = new char[] {'p','a','s','s','w','o','r','d'};
 		String email = "hello@yahoo.com";
 		Customer sampleCustomer = new Customer(firstName, lastName, password, email);
 		return sampleCustomer;
