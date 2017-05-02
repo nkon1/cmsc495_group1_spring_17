@@ -10,7 +10,7 @@ public class Customer {
    private String firstName;
    private String lastName;
    private String email;
-   private String password;
+   private char[] password;
    private byte[] salt;
    private boolean employeeStatus;
    
@@ -18,7 +18,7 @@ public class Customer {
 	   
    }
    
-   public Customer(String firstName, String lastName, String password, byte[] salt, boolean employeeStatus) {
+   public Customer(String firstName, String lastName, char[] password, byte[] salt, boolean employeeStatus) {
 	   this.firstName = firstName;
 	   this.lastName = lastName;
 	   this.password = password;
@@ -32,7 +32,7 @@ public class Customer {
       this.lastName = lastName;   
    }
    
-   public Customer(String firstName, String lastName, String password, String email) {
+   public Customer(String firstName, String lastName, char[] password, String email) {
 	   this.firstName = firstName;
 	   this.lastName = lastName;
 	   this.password = password;
@@ -52,7 +52,7 @@ public class Customer {
       this.email = email;
    }
    
-   public void setPassword(String password) {
+   public void setPassword(char[] password) {
 	   this.password = password;
    }
    
@@ -67,7 +67,7 @@ public class Customer {
    public String getFirstName() { return firstName; }
    public String getLastName() { return lastName; }
    public String getEmail() { return email; }
-   public String getPassword() { return password; }
+   public char[] getPassword() { return password; }
    public byte[] getSalt() { return salt; }
    public boolean getEmployeeStatus() { return employeeStatus; }
    
