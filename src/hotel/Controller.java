@@ -151,7 +151,7 @@ public class Controller {
 			// Submit all this data to the database
 			dao.addCustomerToDatabase(newUser);
 			//dao.addPaymentToDatabase(payment); //code line is hidden from try statement
-System.out.println(ncv.toString());
+
 		}
 	}
 
