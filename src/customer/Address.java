@@ -4,14 +4,10 @@ package customer;
  */
 
 public class Address {
-   private static String streetAddress;
-   private static String city;
-   private static String state;
-   private static int zip;
-   
-   public Address() {
-	   
-   }
+   private String streetAddress;
+   private String city;
+   private String state;
+   private int zip;
    
    public Address(String streetAddress, String city, String state, int zip) {
       this.streetAddress = streetAddress;
@@ -20,20 +16,20 @@ public class Address {
       this.zip = zip;
    }
       
-   public static void setStreetAddress(String streetAddress) {
-      Address.streetAddress = streetAddress;
+   public void setStreetAddress(String streetAddress) {
+      this.streetAddress = streetAddress;
    }
    
-   public static void setCity(String city) {
-      Address.city = city;
+   public void setCity(String city) {
+      this.city = city;
    }
    
-   public static void setState(String state) {
-      Address.state = state;
+   public void setState(String state) {
+      this.state = state;
    }
    
-   public static void setZip(int zip) {
-	   Address.zip= zip;
+   public void setZip(int zip) {
+	   this.zip= zip;
    }
    
    public String getStreetAddress() { return streetAddress; }
