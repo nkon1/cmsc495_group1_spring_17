@@ -8,7 +8,6 @@ import view.ReservationView;
 import view.SelectRoomView;
 import view.NewCustomerView;
 import view.DetailsView;
-import view.EmployeeLoginView;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,6 +24,7 @@ import hotel.Occupant;
 import java.util.Date;
 import room.ParadiseRoom;
 import room.Room;
+import room.RoomType;
 import room.StudioRoom;
 import room.SuiteRoom;
 
@@ -54,9 +54,6 @@ public class Controller {
          ncv.addCancelButtonListener(new NewCustomerCancelButtonListener(this));
          ncv.addSubmitButtonListener(new NewCustomerSubmitButtonListener(this));
          
-      } else if(view.getViewType() == ViewType.EMPLOYEE_LOGIN) {
-         view = (EmployeeLoginView)view;
-         
       } else if(view.getViewType() == ViewType.LOGIN) {
          LoginView lv = (LoginView)view;
          lv.addLoginNewCustomerButtonListener(new LoginNewCustomerButtonListener(this));
@@ -73,7 +70,8 @@ public class Controller {
          
       } else if(view.getViewType() == ViewType.DETAILS) {
          DetailsView dv = (DetailsView)view;
-         dv.addNextButtonActionListener(new DetailsViewListener(this));
+         dv.addNextButtonActionListener(new DetailsViewNextButtonListener(this, dv));
+         
       }
    }
    
@@ -199,24 +197,46 @@ public class Controller {
       @Override
       public void actionPerformed(ActionEvent e) {
          // TODO Auto-generated method stub
-         Room tempRoom = new ParadiseRoom();
-         DetailsView dv = new DetailsView(tempRoom);
+         DetailsView dv = new DetailsView(findSelectedRoom((JButton)e.getSource()));
          controller.setView(dv);
          ((MainView) controller.mainView).setCurrentView(dv);
+      }
+      
+      public Room findSelectedRoom(JButton button) {
+         Room selectedRoom = null;
+         for(RoomType r : RoomType.values()) {
+            if(button.getName() == r.name()) {
+               if(button.getName() == RoomType.PARADISE.name()) {
+                  selectedRoom = new ParadiseRoom();
+               } else if(button.getName() == RoomType.STUDIO.name()) {
+                  selectedRoom = new StudioRoom();
+               } else if(button.getName() == RoomType.SUITE.name()) {
+                  selectedRoom = new SuiteRoom();
+               }
+            }
+         }
+         return selectedRoom;
       }
        
     }
     
-    private class DetailsViewListener implements ActionListener {
+    private class DetailsViewNextButtonListener implements ActionListener {
        private Controller controller;
+       private DetailsView view;
        
-       DetailsViewListener(Controller controller) {
+       DetailsViewNextButtonListener(Controller controller, DetailsView view) {
           this.controller = controller;
+          this.view = view;
        }
 
       @Override
       public void actionPerformed(ActionEvent e) {
          // TODO Auto-generated method stub
+         if(!view.validDate(view.getDateTextField())) {
+            view.displayErrorMessage("The date must be in the form dd/MM/yyyy");
+            return;
+         }
+         
          LoginView lv = new LoginView();
          controller.setView(lv);
          ((MainView) controller.mainView).setCurrentView(lv);
@@ -224,21 +244,21 @@ public class Controller {
        
     }
     
-    public Customer createTestCustomer(){
-       String firstName = "Test";
-         String lastName = "User";
-         Address address = new Address("ABC", "Baltimore", "MD", 123);
-         Customer sampleCustomer = new Customer(firstName, lastName, address);
-         return sampleCustomer;
+   public Customer createTestCustomer() {
+      String firstName = "Test";
+      String lastName = "User";
+      Address address = new Address("ABC", "Baltimore", "MD", 123);
+      Customer sampleCustomer = new Customer(firstName, lastName, address);
+      return sampleCustomer;
    }
    
-   public Reservation createTestReservation(){
-          Occupant testOccupant = new Occupant(createTestCustomer(), 2);
-          ParadiseRoom testRoom = new ParadiseRoom();
-          Payment testPay = new Payment("9999 9999 9999 9999", new Date(), createTestCustomer(), createTestCustomer().getAddresss());
-          Date date = new Date();
-          Reservation testReservation = new Reservation(testOccupant, testRoom, testPay, date, 2 );
-          return testReservation;
+   public Reservation createTestReservation() {
+       Occupant testOccupant = new Occupant(createTestCustomer(), 2);
+       ParadiseRoom testRoom = new ParadiseRoom();
+       Payment testPay = new Payment("9999 9999 9999 9999", new Date(), createTestCustomer(), createTestCustomer().getAddresss());
+       Date date = new Date();
+       Reservation testReservation = new Reservation(testOccupant, testRoom, testPay, date, 2 );
+       return testReservation;
    }
    
    public List<Room> createTestRooms() {

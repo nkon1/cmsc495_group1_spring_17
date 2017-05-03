@@ -20,6 +20,7 @@ public class SelectRoomView extends JPanel implements View {
    private static final long serialVersionUID = -3973966279112037065L;
    private List<Room> rooms;
    private List<JButton> selectionButtons = new ArrayList<>();
+   private Room selectedRoom;
    
    public SelectRoomView(List<Room> rooms) {
       this.rooms = rooms;
@@ -79,6 +80,7 @@ public class SelectRoomView extends JPanel implements View {
       c.gridy = 2;
       JPanel buttonPanel = new JPanel();
       JButton selectionButton = new JButton("Select");
+      selectionButton.setName(roomType.name());
       selectionButtons.add(selectionButton);
       buttonPanel.add(selectionButton);
       
@@ -96,8 +98,19 @@ public class SelectRoomView extends JPanel implements View {
       return count;
    }
    
+   public void setSelectedRoom(Room room) {
+      this.selectedRoom = room;
+   }
+   
    public void addSelectRoomActionListener(JButton button, ActionListener a) {
         button.addActionListener(a);
+   }
+   
+   public Room getSelectedRoom() {
+      if(selectedRoom == null)
+         return null;
+      
+      return selectedRoom;
    }
    
    @Override
