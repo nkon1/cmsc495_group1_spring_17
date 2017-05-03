@@ -3,6 +3,11 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -22,6 +27,7 @@ public class NewCustomerView extends JPanel implements View {
    private JLabel streetNameLabel = new JLabel("Street");
    private JLabel cityLabel = new JLabel("City");
    private JLabel stateLabel = new JLabel("State");
+   private JLabel zipCodeLabel = new JLabel("zipcode");
    private JLabel emailLabel = new JLabel("Email");
    private JLabel confirmEmailLabel = new JLabel("Confirm Email");
    private JLabel passwordLabel = new JLabel("Password");
@@ -36,6 +42,7 @@ public class NewCustomerView extends JPanel implements View {
    private JTextField streetNameTextField = new JTextField(20);
    private JTextField cityTextField = new JTextField(20);
    private JTextField stateTextField = new JTextField(20);
+   private JTextField zipCodeTextField = new JTextField(5);
    private JTextField emailTextField = new JTextField(20);
    private JTextField confirmEmailTextField = new JTextField(20);
    private JPasswordField passwordTextField = new JPasswordField(20);
@@ -139,6 +146,8 @@ public class NewCustomerView extends JPanel implements View {
       JPanel cityPanel = new JPanel();
       cityPanel.add(cityLabel);
       cityPanel.add(cityTextField);
+      cityPanel.add(zipCodeLabel);
+      cityPanel.add(zipCodeTextField);
       panel.add(cityPanel);
       
       JPanel statePanel = new JPanel();
@@ -180,6 +189,65 @@ public class NewCustomerView extends JPanel implements View {
    
    public void addSubmitButtonListener(ActionListener a) {
       submitButton.addActionListener(a);
+   }
+   
+   public String getFirstName(){
+       return firstNameTextField.getText();
+   }
+   
+   public String getLastName(){
+       return lastNameTextField.getText();
+   }
+   
+   public char[] getPassword(){
+       if (Arrays.equals(passwordTextField.getPassword(), confirmPasswordTextField.getPassword())){
+       return passwordTextField.getPassword();
+       }
+       else {
+             displayErrorMessage("Password mismatch"); 
+             return null;
+               }
+   }
+   
+   public String getEmail(){
+       if (emailTextField.getText().equals(confirmEmailTextField.getText())){
+           return emailTextField.getText();
+       }
+       else {
+           displayErrorMessage("Email mismatch");
+           return null;
+       }
+   }
+   
+   public String getStreet(){
+       return streetNameTextField.getText();
+   }
+   
+   public String getCity(){
+       return cityTextField.getText();
+   }
+   
+   public String getState(){
+       return stateTextField.getText();
+   }
+   
+   public int getZipCode(){
+       return Integer.parseInt(zipCodeTextField.getText());
+   }
+   
+   public String getCCnumber(){
+       return ccNumberTextField.getText();
+   }
+   
+   public Date getExpiration() throws ParseException{
+       SimpleDateFormat exp = new SimpleDateFormat("MMyy");
+       exp.setLenient(false);
+       Date expiry = exp.parse(ccExpDateTextField.getText());
+       return expiry;
+   }
+   
+   public String getSecCode(){
+       return ccSecCodeTextField.getText();
    }
 
    @Override

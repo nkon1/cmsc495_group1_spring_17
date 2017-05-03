@@ -9,6 +9,10 @@ public class Address {
    private static String state;
    private static int zip;
    
+   public Address() {
+	   
+   }
+   
    public Address(String streetAddress, String city, String state, int zip) {
       this.streetAddress = streetAddress;
       this.city = city;

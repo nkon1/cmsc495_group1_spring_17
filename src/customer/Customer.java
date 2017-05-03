@@ -9,13 +9,16 @@ package customer;
 public class Customer {
    private String firstName;
    private String lastName;
-   private Address address;
    private String email;
-   private String password;
+   private char[] password;
    private byte[] salt;
    private boolean employeeStatus;
    
-   public Customer() {
+   public Customer () {
+	   
+   }
+   
+   public Customer(String firstName, String lastName, char[] password, byte[] salt, boolean employeeStatus) {
 	   this.firstName = firstName;
 	   this.lastName = lastName;
 	   this.password = password;
@@ -23,10 +26,18 @@ public class Customer {
 	   this.employeeStatus = employeeStatus;
    }
    
-   public Customer(String firstName, String lastName, Address address) {
+   public Customer(String firstName, String lastName) {
+	  this.employeeStatus = false;
       this.firstName = firstName;
-      this.lastName = lastName;
-      this.address = address;      
+      this.lastName = lastName;   
+   }
+   
+   public Customer(String firstName, String lastName, char[] password, String email) {
+	   this.firstName = firstName;
+	   this.lastName = lastName;
+	   this.password = password;
+	   this.email = email;
+	   this.employeeStatus = false;
    }
    
    public void setFirstName(String firstName) {
@@ -37,15 +48,11 @@ public class Customer {
       this.lastName = lastName;
    }
    
-   public void setAddress(Address address) {
-      this.address = address;
-   }
-   
    public void setEmail(String email) {
       this.email = email;
    }
    
-   public void setPassword(String password) {
+   public void setPassword(char[] password) {
 	   this.password = password;
    }
    
@@ -59,9 +66,8 @@ public class Customer {
    
    public String getFirstName() { return firstName; }
    public String getLastName() { return lastName; }
-   public Address getAddresss() { return address; }
    public String getEmail() { return email; }
-   public String getPassword() { return password; }
+   public char[] getPassword() { return password; }
    public byte[] getSalt() { return salt; }
    public boolean getEmployeeStatus() { return employeeStatus; }
    

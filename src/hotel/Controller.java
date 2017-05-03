@@ -1,5 +1,7 @@
 package hotel;
+
 import view.View;
+
 import view.LoginView;
 import view.MainView;
 import view.ViewType;
@@ -18,21 +20,32 @@ import javax.swing.JButton;
 
 import customer.Address;
 import customer.Customer;
+import database.DataAccessObjectImpl;
 import database.Payment;
 import hotel.Reservation; //imported for testing
 import hotel.Occupant;
+import java.text.ParseException;
+
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import room.ParadiseRoom;
 import room.Room;
 import room.RoomType;
 import room.StudioRoom;
 import room.SuiteRoom;
 
+/*
+ * Edited 04/30/2017 by Tiff
+ * 		-added dao method to submitButtonListener
+ */
+
 public class Controller {
-   private Model model;
-   private View mainView;
-   private List<View> views = new ArrayList<>();
-   
+	private Model model;
+	private View mainView;
+	private List<View> views = new ArrayList<>();
+	private DataAccessObjectImpl dao = new DataAccessObjectImpl();
 
    Controller(Model model, View mainView) {
       this.model = model;
@@ -81,7 +94,7 @@ public class Controller {
       CustomerLoginDoneButtonListener(Controller controller) {
          this.controller = controller;
       }
-
+      
       @Override
       public void actionPerformed(ActionEvent e) {
          // TODO Auto-generated method stub
@@ -97,7 +110,7 @@ public class Controller {
       NewCustomerCancelButtonListener(Controller controller) {
          this.controller = controller;
       }
-
+      
       @Override
       public void actionPerformed(ActionEvent e) {
          // TODO Auto-generated method stub
@@ -113,7 +126,7 @@ public class Controller {
       NewCustomerSubmitButtonListener(Controller controller) {
          this.controller = controller;
       }
-
+      
       @Override
       public void actionPerformed(ActionEvent e) {
           

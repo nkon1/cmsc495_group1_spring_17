@@ -1,9 +1,13 @@
 package database;
 
+import hotel.Reservation;
+
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
 import java.sql.SQLException;
+
+import room.Room;
 import customer.Customer;
 
 /** Created 04/23/2016 by Tiff 
@@ -14,13 +18,17 @@ import customer.Customer;
  *  	-getCustomerFromDatabase()
  *  	-addPaymentToDatabase()
  *  	-getConnection()
+ *  Edited 04/30/2016 by Tiff
+ *  	-addReservationToDatabase()
+ *  	-getReservationFromDatabase()
+ *  	-getRoomNumber()
+ *  	-getRoom()
+ *  	-getPaymentNumber()
+ *  	-getPayment()
  */
 
 public interface DataAccessObject {
-	/** TODO: add ReservationToDatabase(Reservation reservation)
-	 *        add getReservationFromDatabase()
-	 */
-	
+
 	/**
 	 * Access to the database to add a customer to the database.
 	 * @param customer The customer object
@@ -28,6 +36,14 @@ public interface DataAccessObject {
 	 * @return success If the customer insertion was successful.
 	 */
 	public boolean addCustomerToDatabase(Customer customer);
+	
+	
+	/**
+	 * 
+	 * @param reservation
+	 * @return success If reservation insertion was successful
+	 */
+	public boolean addReservationToDatabase(Reservation reservation);
 	
 	/**
 	 * @param payment The payment object
@@ -62,7 +78,12 @@ public interface DataAccessObject {
 	public static Connection getConnection() throws ClassNotFoundException, SQLException {
 		return null;
 	}
-
 	
+	public Reservation getReservationFromDatabase(int bookingID);
+	
+	public int getRoomNumber(Room room);
+	public Room getRoom(int roomID);
+	public int getPaymentNumber(Payment payment);
+	public Payment getPayment(int payID); 
 
 }

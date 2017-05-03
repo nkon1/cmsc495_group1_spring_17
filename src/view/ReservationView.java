@@ -45,7 +45,7 @@ public class ReservationView extends JPanel implements View {
       this.add(scroller);
       //mainViewScrollPane.add(panel);
       //this.add(mainViewScrollPane);
-      System.out.println("here");
+      
    }
 
    public void addReservation(Reservation reservation) {

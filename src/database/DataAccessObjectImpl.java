@@ -1,7 +1,7 @@
 package database;
 
-import customer.Customer;
-
+import hotel.Occupant;
+import hotel.Reservation;
 
 
 //import java.security.Key;
@@ -9,13 +9,23 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
+import room.ParadiseRoom;
+import room.Room;
+import room.StudioRoom;
+import room.SuiteRoom;
+import customer.Address;
+import customer.Customer;
 import database.Payment.cardType;
-
-import java.sql.*;
 
 /** Created 04/23/2016 by Tiff 
  *     	-addCustomerToDatabase()
@@ -25,13 +35,17 @@ import java.sql.*;
  *  	-getCustomerFromDatabase()
  *  	-addPaymentToDatabase()
  *  	-getConnection()
+ *  Edited 04/30/2016 by Tiff
+ *  	-addReservationToDatabase()
+ *  	-getReservationFromDatabase()
+ *  	-getRoomNumber()
+ *  	-getRoom()
+ *  	-getPaymentNumber()
+ *  	-getPayment()
  */
 
 
 public class DataAccessObjectImpl implements DataAccessObject {
-	/** TODO: add getReservationFromDatabase()
-	 * 		  add addReservationToDatabase()
-	 */
 	
 	@Override
 	public boolean addCustomerToDatabase(Customer customer) {
@@ -101,6 +115,7 @@ public class DataAccessObjectImpl implements DataAccessObject {
             	boolean employeeStatus = rs.getBoolean("employeeStatus");
             	
             	// set values
+            	queryCustomer.setEmail(email);
             	queryCustomer.setFirstName(firstName);
             	queryCustomer.setLastName(lastName);
             	queryCustomer.setPassword(ePassword);
@@ -158,22 +173,218 @@ public class DataAccessObjectImpl implements DataAccessObject {
 		}
 	}
 	
-	 //maybe modify Reservation class? Need start and end dates.
-//	public Boolean addReservationToDatabase(Reservation reservation) {
-//		try (Connection con = getConnection()) {
-//			// define variables
-//			String User_email = reservation.getOccupant().getCustomer().getEmail();
-//			int Rooms_roomID = reservation.getRoom().//roomid?
-//			int Payment_payID = reservation.getPayment().//paymentID
-//			
-//			
-//		}catch(ClassNotFoundException | SQLException e) {
-//			e.printStackTrace();
-//			return false;
-//		}
-//		
-//	}
-//	
+	
+	public boolean addReservationToDatabase(Reservation reservation) {
+		try (Connection con = getConnection()) {
+			// define variables
+			String User_email = reservation.getOccupant().getCustomer().getEmail();
+			int Rooms_roomID = getRoomNumber(reservation.getRoom());
+			int Payment_payID = getPaymentNumber(reservation.getPayment());
+			Date checkIn = (Date) reservation.getDate();
+			int lengthOfStay = reservation.getNumOfNights();
+			int numOfGuests = reservation.getOccupant().getNumOfGuests();
+			double finalCost = reservation.getCost();
+			
+			String query = "INSERT INTO Booking (User_email, Rooms_roomID, Payment_payID, "
+					+ "checkIn, lengthOfStay, numOfGuests, finalCost) VALUES (?,?,?,?,?,?,?)";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setString(1, User_email);
+            pstmt.setInt(2, Rooms_roomID);
+            pstmt.setInt(3, Payment_payID);
+            pstmt.setDate(4, checkIn);
+            pstmt.setInt(5, lengthOfStay);
+            pstmt.setInt(6, numOfGuests);
+            pstmt.setDouble(7, finalCost);
+            pstmt.execute();
+            con.close();
+            return true;			
+		}catch(ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+	}
+	
+	public Reservation getReservationFromDatabase(int bookingID) {
+		try (Connection con = getConnection()) {
+			// define variables
+			Reservation queryReservation = new Reservation();
+			// check database for customer
+        	String query = "SELECT * FROM Booking WHERE bookingID = ?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, bookingID);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+            	String User_email = rs.getString("User_email");
+            	int Rooms_roomID = rs.getInt("Rooms_roomID");
+            	int Payment_payID = rs.getInt("Payment_payID");
+            	Date checkIn = rs.getDate(5);
+            	int lengthOfStay = rs.getInt("lengthOfStay");
+            	int numOfGuests = rs.getInt("numOfGuests");
+            	double finalCost = rs.getDouble("finalCost");
+            	
+            	Customer queryCustomer = getCustomerFromDatabase(User_email);            	
+            	Occupant queryOccupant = new Occupant(queryCustomer, numOfGuests);
+            	Room queryRoom = getRoom(Rooms_roomID);
+            	Payment queryPayment = getPayment(Payment_payID);       	
+            	
+            	// set values
+            	queryReservation.setBookingID(bookingID);
+            	queryReservation.setOccupant(queryOccupant);
+            	queryReservation.setRoom(queryRoom);
+            	queryReservation.setPayment(queryPayment);;
+            	queryReservation.setDate(checkIn);
+            	queryReservation.setNumOfNights(lengthOfStay);
+            	queryReservation.setCost(finalCost);
+            	
+            	con.close(); 
+            	return queryReservation;            
+            }
+            else {
+            	con.close();
+            	return null;            	
+            }
+		}catch(ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public int getRoomNumber(Room room) {
+		try (Connection con = getConnection()) {
+			// define variables
+			String roomtype = room.getRoomType().toString();
+			boolean isAvailable = true;
+			
+			String query = "SELECT roomID FROM Rooms WHERE roomType = ? AND isAvailable = ?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setString(1, roomtype);
+            pstmt.setBoolean(2, isAvailable);            
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+            	int roomNumber = rs.getInt("roomID");
+            	con.close();
+            	return roomNumber; 
+            } else {
+            	con.close();
+            	return 0;
+            }
+		}catch(ClassNotFoundException | SQLException e){
+			e.printStackTrace();
+			return 0;
+		}	
+	}
+	
+	public Room getRoom(int roomID) {
+		Room room;
+		
+		try (Connection con = getConnection()) {
+			// check database for customer
+        	String query = "SELECT roomType FROM Rooms WHERE roomID = ?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, roomID);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+            	String roomType = rs.getString("roomType");
+//            	boolean available = rs.getBoolean("available");
+//            	boolean kingBed = rs.getBoolean("kingBed");
+//            	boolean queenBed = rs.getBoolean("queenBed");
+//            	boolean microwave = rs.getBoolean("microwave");
+//            	boolean fireplace = rs.getBoolean("fireplace");
+//            	boolean jacuzzi = rs.getBoolean("jacuzzi");
+//            	int numOfBeds = rs.getInt("numOfBeds");
+//            	int maxOccupancy = rs.getInt("maxOccupancy");
+//            	double cost = rs.getDouble("cost");
+            	switch (roomType) {
+            		case "PARADISE" : room = new ParadiseRoom(); break;
+            		case "STUDIO" : room = new StudioRoom(); break;
+            		case "SUITE" : room = new SuiteRoom(); break;
+            		default : room = new StudioRoom(); break;
+            	}
+            	
+            	return room;
+            	
+            }
+            else {
+            	con.close();
+            	return null;            	
+            }
+		}catch(ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public int getPaymentNumber(Payment payment) {
+		try (Connection con = getConnection()) {
+			// define variables
+		    String accountNumber = payment.getAccount();		 
+			
+			String query = "SELECT payID FROM Payment WHERE cardNumber = ?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setString(1, accountNumber);      
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+            	int payID = rs.getInt("payID");
+            	con.close();
+            	return payID; 
+            } else {
+            	con.close();
+            	return 0;
+            }
+		}catch(ClassNotFoundException | SQLException e){
+			e.printStackTrace();
+			return 0;
+		}	
+	}
+	
+	public Payment getPayment(int payID) {
+		Payment queryPayment = new Payment();
+		
+		try (Connection con = getConnection()) {
+			// check database for customer
+        	String query = "SELECT * FROM Payment WHERE payID = ?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, payID);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+            	String User_email = rs.getString("User_email");
+            	String cardHolderName = rs.getString("cardHolderName");
+            	String cardType = rs.getString("cardType");
+            	String cardNumber = rs.getString("cardNumber");
+            	Date expireDate = rs.getDate("expireDate");
+            	String billingAddress1 = rs.getString("billingAddress1");
+            	String billingCity = rs.getString("billingCity");
+            	String billingState = rs.getString("billingState");
+            	int billingZip = rs.getInt("billingZip");
+            	
+            	Address queryAddress = new Address();
+            	
+            	queryAddress.setStreetAddress(billingAddress1);
+            	queryAddress.setCity(billingCity);
+            	queryAddress.setState(billingState);
+            	queryAddress.setZip(billingZip);
+            	
+            	queryPayment.setEmail(User_email);
+            	queryPayment.setCardHolderName(cardHolderName);
+            	queryPayment.setCardType(cardType);
+            	queryPayment.setAccountNumber(cardNumber);
+            	queryPayment.setExpireDate(expireDate);
+            	queryPayment.setAddress(queryAddress);
+            	
+            	return queryPayment;            	
+            }
+            else {
+            	con.close();
+            	return null;            	
+            }
+		}catch(ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 
     public byte[] createSalt() throws NoSuchAlgorithmException {
         // VERY important to use SecureRandom instead of just Random
