@@ -2,6 +2,7 @@ package database;
 
 import hotel.Reservation;
 
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
@@ -25,6 +26,8 @@ import customer.Customer;
  *  	-getRoom()
  *  	-getPaymentNumber()
  *  	-getPayment()
+ *  Edited 05/03/2017 by Tiff
+ *  	-changed methods to take password as char[]
  */
 
 public interface DataAccessObject {
@@ -66,7 +69,7 @@ public interface DataAccessObject {
      * @throws NoSuchAlgorithmException
      * @throws InvalidKeySpecException
      */
-	public byte[] getEncryptedPassword(String password, byte[] salt) 
+	public byte[] getEncryptedPassword(char[] password, byte[] salt) 
 			throws NoSuchAlgorithmException, InvalidKeySpecException;
 	
 	/**
@@ -79,7 +82,7 @@ public interface DataAccessObject {
 		return null;
 	}
 	
-	public Reservation getReservationFromDatabase(int bookingID);
+	public Reservation getReservationFromDatabase(int bookingID) throws IOException;
 	
 	public int getRoomNumber(Room room);
 	public Room getRoom(int roomID);
