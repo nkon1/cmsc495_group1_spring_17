@@ -87,7 +87,9 @@ public class Controller {
 
 		} else if (view.getViewType() == ViewType.RESERVATION_VIEW) {
 			view = (MakeReservationView) view;
-		}
+		} else if (view.getViewType() == ViewType.SELECT_ROOM) {
+                        view = (SelectRoomView) view;
+                }
 	}
 
 	private class CustomerLoginDoneButtonListener implements ActionListener {
@@ -237,8 +239,7 @@ public class Controller {
 			rv.addReservation(createTestReservation());
 			controller.addView(rv);
 			((MainView) controller.mainView).setCurrentView(rv);
-			System.out.println(rv.getViewType().toString());
-
+			
 		}
 
 	}
