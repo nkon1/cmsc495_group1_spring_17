@@ -78,6 +78,7 @@ public class SelectRoomView extends JPanel implements View {
       JPanel buttonPanel = new JPanel();
       JButton selectionButton = new JButton("Select");
       buttonPanel.add(selectionButton, c);
+      panel.add(buttonPanel);
       
       return panel;
    }
