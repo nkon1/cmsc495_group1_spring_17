@@ -1,6 +1,8 @@
 package customer;
 /** Edited 04/28/2016 by Tiff, combined house number & street
  *      Added zip variable and methods
+ *  Edited 05/03/2017 by Tiff
+ *  	added blank Address constructor
  */
 
 public class Address {
@@ -8,6 +10,10 @@ public class Address {
    private String city;
    private String state;
    private int zip;
+   
+   public Address() {
+	   
+   }
    
    public Address(String streetAddress, String city, String state, int zip) {
       this.streetAddress = streetAddress;

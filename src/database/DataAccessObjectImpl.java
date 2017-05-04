@@ -3,7 +3,7 @@ package database;
 import hotel.Occupant;
 import hotel.Reservation;
 
-
+import java.io.IOException;
 //import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -42,6 +42,8 @@ import database.Payment.cardType;
  *  	-getRoom()
  *  	-getPaymentNumber()
  *  	-getPayment()
+ *  Edited 05/03/2017 by Tiff
+ *  	-edited methods to change pasword as char[]
  */
 
 
@@ -64,7 +66,11 @@ public class DataAccessObjectImpl implements DataAccessObject {
             	String email = customer.getEmail();
             	String firstName = customer.getFirstName();
             	String lastName = customer.getLastName();
+<<<<<<< HEAD
             	String password = customer.getPassword().toString();
+=======
+            	char[] password = customer.getPassword();
+>>>>>>> 8a5903c35281f81a994e52e02ac7243a9dd6a2ac
             	byte[] salt;  
             	// default value for employeeStatus is always false, requires admin 
             	// rights to reflect true
@@ -98,7 +104,7 @@ public class DataAccessObjectImpl implements DataAccessObject {
         }
 	}
 	
-	public Customer getCustomerFromDatabase(String email) {
+	public Customer getCustomerFromDatabase(String email) throws IOException {
 		try (Connection con = getConnection()) {
 			// define variables
 			Customer queryCustomer = new Customer();
@@ -110,7 +116,8 @@ public class DataAccessObjectImpl implements DataAccessObject {
             if (rs.next()) {
             	String firstName = rs.getString("firstName");
             	String lastName = rs.getString("lastName");
-            	String ePassword = new String(rs.getBytes("ePassword"));
+            	char[] ePassword = new char[50];
+            	rs.getCharacterStream("ePassword").read(ePassword); 
             	byte[] salt = rs.getBytes("salt");
             	boolean employeeStatus = rs.getBoolean("employeeStatus");
             	
@@ -205,7 +212,7 @@ public class DataAccessObjectImpl implements DataAccessObject {
 		
 	}
 	
-	public Reservation getReservationFromDatabase(int bookingID) {
+	public Reservation getReservationFromDatabase(int bookingID) throws IOException {
 		try (Connection con = getConnection()) {
 			// define variables
 			Reservation queryReservation = new Reservation();
@@ -395,14 +402,14 @@ public class DataAccessObjectImpl implements DataAccessObject {
         return dsalt;
     }
     
-    public byte[] getEncryptedPassword(String password, byte[] salt)
+    public byte[] getEncryptedPassword(char[] password, byte[] salt)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
         // PBKDF2 with SHA-1 as the hashing algorithm. 
         String algorithm = "PBKDF2WithHmacSHA1";
         // SHA-1 generates 160 bit hashes
         int derivedKeyLength = 160;
         int iterations = 20000;
-        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, iterations, derivedKeyLength);
+        KeySpec spec = new PBEKeySpec(password, salt, iterations, derivedKeyLength);
         SecretKeyFactory f = SecretKeyFactory.getInstance(algorithm);
         return f.generateSecret(spec).getEncoded();
     }

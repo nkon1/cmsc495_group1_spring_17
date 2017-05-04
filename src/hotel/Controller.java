@@ -144,7 +144,6 @@ public class Controller {
       
       @Override
       public void actionPerformed(ActionEvent e) {
-         // TODO Auto-generated method stub
          NewCustomerView ncv = new NewCustomerView();
          controller.setView(ncv);
          ((MainView) controller.mainView).setCurrentView(ncv);
@@ -209,7 +208,6 @@ public class Controller {
        
       @Override
       public void actionPerformed(ActionEvent e) {
-         // TODO Auto-generated method stub
          DetailsView dv = new DetailsView(findSelectedRoom((JButton)e.getSource()));
          controller.setView(dv);
          ((MainView) controller.mainView).setCurrentView(dv);
@@ -244,7 +242,6 @@ public class Controller {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-         // TODO Auto-generated method stub
          if(!view.validDate(view.getDateTextField())) {
             view.displayErrorMessage("The date must be in the form dd/MM/yyyy");
             return;
@@ -257,22 +254,22 @@ public class Controller {
        
     }
     
-   public Customer createTestCustomer() {
-      String firstName = "Test";
-      String lastName = "User";
-      Address address = new Address("ABC", "Baltimore", "MD", 123);
-      Customer sampleCustomer = new Customer(firstName, lastName, address);
-      return sampleCustomer;
-   }
-   
-   public Reservation createTestReservation() {
-       Occupant testOccupant = new Occupant(createTestCustomer(), 2);
-       ParadiseRoom testRoom = new ParadiseRoom();
-       Payment testPay = new Payment("9999 9999 9999 9999", new Date(), createTestCustomer(), createTestCustomer().getAddresss());
-       Date date = new Date();
-       Reservation testReservation = new Reservation(testOccupant, testRoom, testPay, date, 2 );
-       return testReservation;
-   }
+//   public Customer createTestCustomer() {
+//      String firstName = "Test";
+//      String lastName = "User";
+//      Address address = new Address("ABC", "Baltimore", "MD", 123);
+//      Customer sampleCustomer = new Customer(firstName, lastName, address);
+//      return sampleCustomer;
+//   }
+//   
+//   public Reservation createTestReservation() {
+//       Occupant testOccupant = new Occupant(createTestCustomer(), 2);
+//       ParadiseRoom testRoom = new ParadiseRoom();
+//       Payment testPay = new Payment("9999 9999 9999 9999", new Date(), createTestCustomer(), createTestCustomer().getAddresss());
+//       Date date = new Date();
+//       Reservation testReservation = new Reservation(testOccupant, testRoom, testPay, date, 2 );
+//       return testReservation;
+//   }
    
    public List<Room> createTestRooms() {
       ParadiseRoom pRoom = new ParadiseRoom();
