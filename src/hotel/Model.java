@@ -10,11 +10,11 @@ public class Model {
     private Address address;
     private Payment payment;
     
-    /*public Model(Customer customer, Address address, Payment payment){
+    public Model(Customer customer, Address address, Payment payment){
         this.customer = customer;
         this.address = address;
         this.payment = payment;
-    }*/
+    }
     
     public void setCustomer(Customer customer){
         this.customer = customer;
