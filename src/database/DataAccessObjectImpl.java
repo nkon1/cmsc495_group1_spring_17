@@ -64,7 +64,7 @@ public class DataAccessObjectImpl implements DataAccessObject {
             	String email = customer.getEmail();
             	String firstName = customer.getFirstName();
             	String lastName = customer.getLastName();
-            	String password = customer.getPassword();
+            	String password = customer.getPassword().toString();
             	byte[] salt;  
             	// default value for employeeStatus is always false, requires admin 
             	// rights to reflect true
@@ -118,7 +118,7 @@ public class DataAccessObjectImpl implements DataAccessObject {
             	queryCustomer.setEmail(email);
             	queryCustomer.setFirstName(firstName);
             	queryCustomer.setLastName(lastName);
-            	queryCustomer.setPassword(ePassword);
+            	queryCustomer.setPassword(ePassword.toCharArray());
             	queryCustomer.setSalt(salt);
             	queryCustomer.setEmployeeStatus(employeeStatus);
             	
@@ -360,7 +360,7 @@ public class DataAccessObjectImpl implements DataAccessObject {
             	String billingState = rs.getString("billingState");
             	int billingZip = rs.getInt("billingZip");
             	
-            	Address queryAddress = new Address();
+            	Address queryAddress = new Address(billingAddress1, billingCity, billingState, billingZip);
             	
             	queryAddress.setStreetAddress(billingAddress1);
             	queryAddress.setCity(billingCity);
