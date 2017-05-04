@@ -12,9 +12,7 @@ public class HotelReservationSimulator {
       // TODO Auto-generated method stub
       StarterView sv = new StarterView();
       MainView mainView = new MainView(sv);
-      //Connection connection = DataAccessObjectImpl.getConnection();
       Controller controller = new Controller(new Model(new DataAccessObjectImpl()), mainView);
-      //connection.close();
    }
 
 }

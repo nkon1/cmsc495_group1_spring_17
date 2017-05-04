@@ -1,6 +1,8 @@
 package hotel;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 import customer.Customer;
 import database.DataAccessObjectImpl;
@@ -19,5 +21,9 @@ public class Model {
     
     public Customer getCustomer(String email) throws IOException {
        return dao.getCustomerFromDatabase(email);
+    }
+    
+    public byte[] getDatabasePassword(char[] password, byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException {
+       return dao.getEncryptedPassword(password, salt);
     }
 }

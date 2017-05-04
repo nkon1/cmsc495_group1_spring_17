@@ -11,9 +11,12 @@ import view.SelectRoomView;
 import view.NewCustomerView;
 import view.DetailsView;
 
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -163,16 +166,20 @@ public class Controller {
       @Override
       public void actionPerformed(ActionEvent e) {
          // TODO Auto-generated method stub
-         Customer customer = null;
+         Customer dbCustomer = null;
          try {
-            customer = model.getCustomer(view.getUsername());
-            if(customer == null) {
+            dbCustomer = model.getCustomer(view.getUsername());
+            if(dbCustomer == null) {
                JOptionPane.showMessageDialog(null, String.format("%s does not exist", view.getUsername()), "New Customer Error Message", JOptionPane.ERROR_MESSAGE);
-            } else if(String.copyValueOf(customer.getPassword()) != view.getPassword()) {
+            } else if(model.getDatabasePassword(dbCustomer.getPassword(), dbCustomer.getSalt()) != 
+                  model.getDatabasePassword(view.getPassword().toCharArray(), dbCustomer.getSalt())) {
                JOptionPane.showMessageDialog(null, "The password provided is not valid", "New Customer Error Message", JOptionPane.ERROR_MESSAGE);
             } else {
                JOptionPane.showMessageDialog(view, "Login Successful!");
             }
+         } catch (HeadlessException | NoSuchAlgorithmException | InvalidKeySpecException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
          } catch (IOException e1) {
             // TODO Auto-generated catch block
             e1.printStackTrace();
