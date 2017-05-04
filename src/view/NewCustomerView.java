@@ -3,7 +3,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -201,19 +200,17 @@ public class NewCustomerView extends JPanel implements View {
    
    public char[] getPassword(){
        if (Arrays.equals(passwordTextField.getPassword(), confirmPasswordTextField.getPassword())){
-       return passwordTextField.getPassword();
-       }
-       else {
+          return passwordTextField.getPassword();
+       } else {
              displayErrorMessage("Password mismatch"); 
              return null;
-               }
+       }
    }
    
-   public String getEmail(){
+   public String getEmail() {
        if (emailTextField.getText().equals(confirmEmailTextField.getText())){
            return emailTextField.getText();
-       }
-       else {
+       } else {
            displayErrorMessage("Email mismatch");
            return null;
        }

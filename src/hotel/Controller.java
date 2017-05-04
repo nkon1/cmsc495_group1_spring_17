@@ -13,22 +13,15 @@ import view.DetailsView;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 
-import customer.Address;
 import customer.Customer;
 import database.DataAccessObjectImpl;
-import database.Payment;
-import hotel.Reservation; //imported for testing
-import hotel.Occupant;
-import java.text.ParseException;
-
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import room.ParadiseRoom;
 import room.Room;
@@ -65,12 +58,12 @@ public class Controller {
       } else if(view.getViewType() == ViewType.NEW_CUSTOMER) {
          NewCustomerView ncv = (NewCustomerView)view;
          ncv.addCancelButtonListener(new NewCustomerCancelButtonListener(this));
-         ncv.addSubmitButtonListener(new NewCustomerSubmitButtonListener(this));
+         ncv.addSubmitButtonListener(new NewCustomerSubmitButtonListener(ncv));
          
       } else if(view.getViewType() == ViewType.LOGIN) {
          LoginView lv = (LoginView)view;
          lv.addLoginNewCustomerButtonListener(new LoginNewCustomerButtonListener(this));
-         lv.addLoginButtonListener(new LoginButtonListener(this));
+         lv.addLoginButtonListener(new LoginButtonListener(lv));
          
       } else if(view.getViewType() == ViewType.SELECT_ROOM) {
          SelectRoomView srv = (SelectRoomView)view;
@@ -121,17 +114,26 @@ public class Controller {
    }
    
    private class NewCustomerSubmitButtonListener implements ActionListener {
-      private Controller controller;
+      private NewCustomerView view;
       
-      NewCustomerSubmitButtonListener(Controller controller) {
-         this.controller = controller;
+      NewCustomerSubmitButtonListener(NewCustomerView view) {
+         this.view = view;
       }
       
       @Override
       public void actionPerformed(ActionEvent e) {
           
          // TODO Auto-generated method stub
-         // TODO: Use model to write changes to database and send user back to login view
+         Customer customer = new Customer(view.getFirstName(),
+                                          view.getLastName(),
+                                          view.getPassword(),
+                                          view.getEmail());
+         boolean added = model.addCustomer(customer);
+         if(added) {
+            JOptionPane.showMessageDialog(view, String.format("%s, %s was create successfully!", customer.getLastName(), customer.getFirstName()));
+         } else {
+            view.displayErrorMessage("Problem encountered while attempting to create the account.");
+         }
       }
    }
    
@@ -152,18 +154,29 @@ public class Controller {
    }
    
    private class LoginButtonListener implements ActionListener {
-      private Controller controller;
+      private LoginView view;
       
-      LoginButtonListener(Controller controller) {
-         this.controller = controller;
+      LoginButtonListener(LoginView view) {
+         this.view = view;
       }
       
       @Override
       public void actionPerformed(ActionEvent e) {
          // TODO Auto-generated method stub
-         // TODO: Check username/password in model's database
-         // TODO: Check if is an employee or customer
-         // TODO: Send user to reservations
+         Customer customer = null;
+         try {
+            customer = model.getCustomer(view.getUsername());
+            if(customer == null) {
+               JOptionPane.showMessageDialog(null, String.format("%s does not exist", view.getUsername()), "New Customer Error Message", JOptionPane.ERROR_MESSAGE);
+            } else if(String.copyValueOf(customer.getPassword()) != view.getPassword()) {
+               JOptionPane.showMessageDialog(null, "The password provided is not valid", "New Customer Error Message", JOptionPane.ERROR_MESSAGE);
+            } else {
+               JOptionPane.showMessageDialog(view, "Login Successful!");
+            }
+         } catch (IOException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+         }
       }
    }
    
@@ -253,23 +266,6 @@ public class Controller {
       }
        
     }
-    
-//   public Customer createTestCustomer() {
-//      String firstName = "Test";
-//      String lastName = "User";
-//      Address address = new Address("ABC", "Baltimore", "MD", 123);
-//      Customer sampleCustomer = new Customer(firstName, lastName, address);
-//      return sampleCustomer;
-//   }
-//   
-//   public Reservation createTestReservation() {
-//       Occupant testOccupant = new Occupant(createTestCustomer(), 2);
-//       ParadiseRoom testRoom = new ParadiseRoom();
-//       Payment testPay = new Payment("9999 9999 9999 9999", new Date(), createTestCustomer(), createTestCustomer().getAddresss());
-//       Date date = new Date();
-//       Reservation testReservation = new Reservation(testOccupant, testRoom, testPay, date, 2 );
-//       return testReservation;
-//   }
    
    public List<Room> createTestRooms() {
       ParadiseRoom pRoom = new ParadiseRoom();

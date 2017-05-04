@@ -12,22 +12,19 @@ public class Customer {
    private String email;
    private char[] password;
    private byte[] salt;
-   private boolean employeeStatus;
    
    public Customer () {
 	   
    }
    
-   public Customer(String firstName, String lastName, char[] password, byte[] salt, boolean employeeStatus) {
+   public Customer(String firstName, String lastName, char[] password, byte[] salt) {
 	   this.firstName = firstName;
 	   this.lastName = lastName;
 	   this.password = password;
 	   this.salt = salt;
-	   this.employeeStatus = employeeStatus;
    }
    
    public Customer(String firstName, String lastName) {
-	  this.employeeStatus = false;
       this.firstName = firstName;
       this.lastName = lastName;   
    }
@@ -37,7 +34,6 @@ public class Customer {
 	   this.lastName = lastName;
 	   this.password = password;
 	   this.email = email;
-	   this.employeeStatus = false;
    }
    
    public void setFirstName(String firstName) {
@@ -60,16 +56,11 @@ public class Customer {
 	   this.salt = salt;
    }
    
-   public void setEmployeeStatus(boolean employeeStatus) {
-	   this.employeeStatus = employeeStatus;
-   }
-   
    public String getFirstName() { return firstName; }
    public String getLastName() { return lastName; }
    public String getEmail() { return email; }
    public char[] getPassword() { return password; }
    public byte[] getSalt() { return salt; }
-   public boolean getEmployeeStatus() { return employeeStatus; }
    
    public String toString() {
       return String.format("%s, %s", lastName, firstName);

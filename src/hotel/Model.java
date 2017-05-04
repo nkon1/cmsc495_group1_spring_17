@@ -1,42 +1,23 @@
 package hotel;
 
-import customer.Address;
+import java.io.IOException;
+
 import customer.Customer;
-import database.Payment;
+import database.DataAccessObjectImpl;
 
 public class Model {
-
-    private Customer customer;
-    private Address address;
-    private Payment payment;
+   
+   private DataAccessObjectImpl dao;
     
-    public Model(Customer customer, Address address, Payment payment){
-        this.customer = customer;
-        this.address = address;
-        this.payment = payment;
+    public Model(DataAccessObjectImpl dao) {
+       this.dao = dao;
     }
     
-    public void setCustomer(Customer customer){
-        this.customer = customer;
+    public boolean addCustomer(Customer customer) {
+       return dao.addCustomerToDatabase(customer);
     }
     
-    public void setAddress(Address address){
-        this.address = address;
-    }
-    
-    public void setPayment(Payment payment){
-        this.payment = payment;
-    }
-    
-    public Customer getCustomer(){
-        return customer;
-    }
-    
-    public Address getAddress(){
-        return address;
-    }
-    
-    public Payment getPayment(){
-        return payment;
+    public Customer getCustomer(String email) throws IOException {
+       return dao.getCustomerFromDatabase(email);
     }
 }

@@ -66,11 +66,7 @@ public class DataAccessObjectImpl implements DataAccessObject {
             	String email = customer.getEmail();
             	String firstName = customer.getFirstName();
             	String lastName = customer.getLastName();
-<<<<<<< HEAD
-            	String password = customer.getPassword().toString();
-=======
             	char[] password = customer.getPassword();
->>>>>>> 8a5903c35281f81a994e52e02ac7243a9dd6a2ac
             	byte[] salt;  
             	// default value for employeeStatus is always false, requires admin 
             	// rights to reflect true
@@ -119,15 +115,13 @@ public class DataAccessObjectImpl implements DataAccessObject {
             	char[] ePassword = new char[50];
             	rs.getCharacterStream("ePassword").read(ePassword); 
             	byte[] salt = rs.getBytes("salt");
-            	boolean employeeStatus = rs.getBoolean("employeeStatus");
             	
             	// set values
             	queryCustomer.setEmail(email);
             	queryCustomer.setFirstName(firstName);
             	queryCustomer.setLastName(lastName);
-            	queryCustomer.setPassword(ePassword.toCharArray());
+            	queryCustomer.setPassword(ePassword);
             	queryCustomer.setSalt(salt);
-            	queryCustomer.setEmployeeStatus(employeeStatus);
             	
             	con.close(); 
             	return queryCustomer;            
