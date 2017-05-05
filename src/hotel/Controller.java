@@ -22,6 +22,7 @@ import room.Room;
 import room.RoomType;
 import room.StudioRoom;
 import room.SuiteRoom;
+import view.ConfirmReservationView;
 import view.DetailsView;
 import view.LoginView;
 import view.MainView;
@@ -64,8 +65,10 @@ public class Controller {
          
       } else if(view.getViewType() == ViewType.LOGIN) {
          LoginView lv = (LoginView)view;
+         
+         // Create reservation from login view
          lv.addLoginNewCustomerButtonListener(new LoginNewCustomerButtonListener(this));
-         lv.addLoginButtonListener(new LoginButtonListener(this, lv, createReservation()));
+         lv.addLoginButtonListener(new LoginButtonListener(this, lv, createReservation(lv)));
          
       } else if(view.getViewType() == ViewType.SELECT_ROOM) {
          SelectRoomView srv = (SelectRoomView)view;
@@ -79,6 +82,10 @@ public class Controller {
       } else if(view.getViewType() == ViewType.DETAILS) {
          DetailsView dv = (DetailsView)view;
          dv.addNextButtonActionListener(new DetailsViewNextButtonListener(this, dv));
+         
+      } else if(view.getViewType() == ViewType.CONFIRMATION) {
+         ConfirmReservationView crv = (ConfirmReservationView)view;
+         crv.addConfirmButtonActionListener(new ConfirmReservationListener(crv));
          
       }
    }
@@ -161,11 +168,6 @@ public class Controller {
       private LoginView view;
       private Reservation reservation = null;
       
-      LoginButtonListener(Controller controller, LoginView view) {
-         this.controller = controller;
-         this.view = view;
-      }
-      
       LoginButtonListener(Controller controller, LoginView view, Reservation reservation) {
          this.controller = controller;
          this.view = view;
@@ -177,9 +179,9 @@ public class Controller {
          // TODO Auto-generated method stub
          Customer dbCustomer = null;
          try {
-            dbCustomer = model.getCustomer(view.getUsername());
+            dbCustomer = model.getCustomer(view.getEmail());
             if(dbCustomer == null) {
-               JOptionPane.showMessageDialog(null, String.format("%s does not exist", view.getUsername()), "New Customer Error Message", JOptionPane.ERROR_MESSAGE);
+               JOptionPane.showMessageDialog(null, String.format("%s does not exist", view.getEmail()), "New Customer Error Message", JOptionPane.ERROR_MESSAGE);
             } else {
                if(login(dbCustomer)) {
                   if(reservation == null) {
@@ -189,10 +191,10 @@ public class Controller {
                      ((MainView) controller.mainView).setCurrentView(rv);
                   } else {
                      // Display reservation review prior to final submissions
-                     ReservationView rv = new ReservationView();
-                     rv.addReservation(reservation);
-                     controller.setView(rv);
-                     ((MainView) controller.mainView).setCurrentView(rv);
+                     // Create the reservation
+                     ConfirmReservationView crv = new ConfirmReservationView(reservation);
+                     controller.setView(crv);
+                     ((MainView) controller.mainView).setCurrentView(crv);
                   }
               }
             }
@@ -310,8 +312,22 @@ public class Controller {
       }
        
     }
+    
+    private class ConfirmReservationListener implements ActionListener {
+       private ConfirmReservationView view;
+       
+       ConfirmReservationListener(ConfirmReservationView view) {
+          this.view = view;
+       }
+       
+      @Override
+      public void actionPerformed(ActionEvent e) {
+         // TODO Auto-generated method stub
+         model.addReservationToDatabase(view.getReservation());
+      }
+    }
    
-   private Reservation createReservation() {
+   private Reservation createReservation(Customer customer) {
       Customer customer = new Customer("test", "user", "password".toCharArray(), "test@test.com");
       Occupant occupant = new Occupant(customer, 2);
       Reservation r = null;

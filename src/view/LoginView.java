@@ -4,6 +4,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -11,9 +12,9 @@ import javax.swing.JTextField;
 public class LoginView extends JPanel implements View {
    private static final long serialVersionUID = 2090770939931306216L;
    private JPanel mainPanel = new JPanel();
-   private JLabel userLabel = new JLabel("Username");
+   private JLabel emailLabel = new JLabel("Email");
    private JLabel passwordLabel = new JLabel("Password");
-   private JTextField userField = new JTextField(20);
+   private JTextField emailField = new JTextField(20);
    private JPasswordField passwordField = new JPasswordField(20);
    private JButton loginButton = new JButton("Log In");
    private JButton newCustomerButton = new JButton("New Customer");
@@ -35,13 +36,13 @@ public class LoginView extends JPanel implements View {
    }
    
    public void setUserLabel(String text) {
-      userLabel.setText(text);
+      emailLabel.setText(text);
    }
    
    private JPanel createUserPanel() {
       JPanel panel = new JPanel();
-      panel.add(userLabel);
-      panel.add(userField);
+      panel.add(emailLabel);
+      panel.add(emailField);
       return panel;
    }
    
@@ -52,8 +53,8 @@ public class LoginView extends JPanel implements View {
       return panel;
    }
    
-   public String getUsername() {
-      return userField.getText();
+   public String getEmail() {
+      return emailField.getText();
    }
    
    public char[] getPassword() {
@@ -71,7 +72,7 @@ public class LoginView extends JPanel implements View {
    @Override
    public void displayErrorMessage(String message) {
       // TODO Auto-generated method stub
-      
+      JOptionPane.showMessageDialog(this, message, "Login Error Message", JOptionPane.ERROR_MESSAGE);
    }
 
    @Override

@@ -43,4 +43,8 @@ public class Model {
         SecretKeyFactory f = SecretKeyFactory.getInstance(algorithm);
         return f.generateSecret(spec).getEncoded();
     }
+    
+    public boolean addReservationToDatabase(Reservation reservation) {
+       return dao.addReservationToDatabase(reservation);
+    }
 }
