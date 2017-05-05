@@ -56,8 +56,8 @@ public class LoginView extends JPanel implements View {
       return userField.getText();
    }
    
-   public String getPassword() {
-      return String.valueOf(passwordField.getPassword());
+   public char[] getPassword() {
+      return passwordField.getPassword();
    }
    
    public void addLoginButtonListener(ActionListener a) {

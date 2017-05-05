@@ -1,16 +1,5 @@
 package hotel;
 
-import view.View;
-
-import view.LoginView;
-import view.MainView;
-import view.ViewType;
-import view.StarterView;
-import view.ReservationView;
-import view.SelectRoomView;
-import view.NewCustomerView;
-import view.DetailsView;
-
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,6 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -26,11 +16,21 @@ import javax.swing.JOptionPane;
 
 import customer.Customer;
 import customer.Payment;
+import database.DataAccessObjectImpl;
 import room.ParadiseRoom;
 import room.Room;
 import room.RoomType;
 import room.StudioRoom;
 import room.SuiteRoom;
+import view.DetailsView;
+import view.LoginView;
+import view.MainView;
+import view.NewCustomerView;
+import view.ReservationView;
+import view.SelectRoomView;
+import view.StarterView;
+import view.View;
+import view.ViewType;
 
 /*
  * Edited 04/30/2017 by Tiff
@@ -311,17 +311,6 @@ public class Controller {
        
     }
    
-   private List<Room> createTestRooms() {
-      ParadiseRoom pRoom = new ParadiseRoom();
-      StudioRoom studioRoom = new StudioRoom();
-      SuiteRoom suiteRoom = new SuiteRoom();
-      List<Room> rooms = new ArrayList<>();
-      rooms.add(pRoom);
-      rooms.add(suiteRoom);
-      rooms.add(studioRoom);
-      return rooms;
-   }
-   
    private Reservation createReservation() {
       Customer customer = new Customer("test", "user", "password".toCharArray(), "test@test.com");
       Occupant occupant = new Occupant(customer, 2);
@@ -329,5 +318,15 @@ public class Controller {
       r = new Reservation(occupant, new ParadiseRoom(), new Payment(), new Date() {}, 2, 179.99);
       return r;
    }
-   
+
+	public List<Room> createTestRooms() {
+		ParadiseRoom pRoom = new ParadiseRoom();
+		StudioRoom studioRoom = new StudioRoom();
+		SuiteRoom suiteRoom = new SuiteRoom();
+		List<Room> rooms = new ArrayList<>();
+		rooms.add(pRoom);
+		rooms.add(suiteRoom);
+		rooms.add(studioRoom);
+		return rooms;
+	}
 }
