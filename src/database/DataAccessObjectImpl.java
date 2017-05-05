@@ -67,6 +67,7 @@ public class DataAccessObjectImpl implements DataAccessObject {
             	String firstName = customer.getFirstName();
             	String lastName = customer.getLastName();
             	char[] password = customer.getPassword();
+            	
             	byte[] salt;  
             	// default value for employeeStatus is always false, requires admin 
             	// rights to reflect true
@@ -86,6 +87,10 @@ public class DataAccessObjectImpl implements DataAccessObject {
 	                pstmt.setBytes(5, salt);
 	                pstmt.setBoolean(6, employeeStatus);             	                
 	                pstmt.execute();
+	                
+	                // debugging
+	                System.out.println("Password is: " + password);
+	                // end debugging
 	                con.close();
 	                // customer inserted
 	                return true;
@@ -112,19 +117,42 @@ public class DataAccessObjectImpl implements DataAccessObject {
             if (rs.next()) {
             	String firstName = rs.getString("firstName");
             	String lastName = rs.getString("lastName");
-            	char[] ePassword = new char[50];
-            	rs.getCharacterStream("ePassword").read(ePassword); 
+            	byte[] ePassword = rs.getBytes("ePassword");
             	byte[] salt = rs.getBytes("salt");
             	
             	// set values
             	queryCustomer.setEmail(email);
             	queryCustomer.setFirstName(firstName);
             	queryCustomer.setLastName(lastName);
-            	queryCustomer.setPassword(ePassword);
+            	//String tempPassword = new String(ePassword);
+            	//queryCustomer.setEPassword(tempPassword.toCharArray());
+            	queryCustomer.setEPassword(ePassword);
             	queryCustomer.setSalt(salt);
             	
             	con.close(); 
             	return queryCustomer;            
+            }
+            else {
+            	con.close();
+            	return null;            	
+            }
+		}catch(ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public byte[] getPasswordFromDatabase(String email) throws IOException {
+		try (Connection con = getConnection()) {
+			// check database for customer
+        	String query = "SELECT ePassword FROM User WHERE email = ?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setString(1, email);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+            	byte[] ePassword = rs.getBytes("ePassword");   	
+            	con.close(); 
+            	return ePassword;            
             }
             else {
             	con.close();

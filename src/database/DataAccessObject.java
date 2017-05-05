@@ -61,16 +61,7 @@ public interface DataAccessObject {
 	 */
 	public byte[] createSalt() throws NoSuchAlgorithmException;
 	
-    /**
-     * 
-     * @param password
-     * @param salt
-     * @return encrypted password
-     * @throws NoSuchAlgorithmException
-     * @throws InvalidKeySpecException
-     */
-	public byte[] getEncryptedPassword(char[] password, byte[] salt) 
-			throws NoSuchAlgorithmException, InvalidKeySpecException;
+
 	
 	/**
 	 * 

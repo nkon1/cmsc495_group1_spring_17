@@ -1,16 +1,5 @@
 package hotel;
 
-import view.View;
-
-import view.LoginView;
-import view.MainView;
-import view.ViewType;
-import view.StarterView;
-import view.ReservationView;
-import view.SelectRoomView;
-import view.NewCustomerView;
-import view.DetailsView;
-
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,6 +7,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -25,12 +15,20 @@ import javax.swing.JOptionPane;
 
 import customer.Customer;
 import database.DataAccessObjectImpl;
-
 import room.ParadiseRoom;
 import room.Room;
 import room.RoomType;
 import room.StudioRoom;
 import room.SuiteRoom;
+import view.DetailsView;
+import view.LoginView;
+import view.MainView;
+import view.NewCustomerView;
+import view.ReservationView;
+import view.SelectRoomView;
+import view.StarterView;
+import view.View;
+import view.ViewType;
 
 /*
  * Edited 04/30/2017 by Tiff
@@ -43,246 +41,278 @@ public class Controller {
 	private List<View> views = new ArrayList<>();
 	private DataAccessObjectImpl dao = new DataAccessObjectImpl();
 
-   Controller(Model model, View mainView) {
-      this.model = model;
-      this.mainView = mainView;
-      setView(((MainView)mainView).getCurrentView());
-   }
-   
-   public void setView(View view) {
-      views.add(view);
-      // Lookup the view and add its listeners
-      if(view.getViewType() == ViewType.STARTER) {
-         StarterView starterView = (StarterView)view;
-         starterView.addDoneButtonActionListener(new CustomerLoginDoneButtonListener(this));
-         starterView.addViewReservationButtonListener(new ViewReservationButtonListener(this));
-         starterView.addMakeReservationButtonListener(new MakeReservationButtonListener(this));
-         
-      } else if(view.getViewType() == ViewType.NEW_CUSTOMER) {
-         NewCustomerView ncv = (NewCustomerView)view;
-         ncv.addCancelButtonListener(new NewCustomerCancelButtonListener(this));
-         ncv.addSubmitButtonListener(new NewCustomerSubmitButtonListener(ncv));
-         
-      } else if(view.getViewType() == ViewType.LOGIN) {
-         LoginView lv = (LoginView)view;
-         lv.addLoginNewCustomerButtonListener(new LoginNewCustomerButtonListener(this));
-         lv.addLoginButtonListener(new LoginButtonListener(lv));
-         
-      } else if(view.getViewType() == ViewType.SELECT_ROOM) {
-         SelectRoomView srv = (SelectRoomView)view;
-         for(JButton button : srv.getSelectionButtons()) {
-            srv.addSelectRoomActionListener(button, new SelectRoomListener(this));
-         }
-         
-      } else if(view.getViewType() == ViewType.RESERVATION) {
-         view = (ReservationView)view;
-         
-      } else if(view.getViewType() == ViewType.DETAILS) {
-         DetailsView dv = (DetailsView)view;
-         dv.addNextButtonActionListener(new DetailsViewNextButtonListener(this, dv));
-         
-      }
-   }
-   
-   private class CustomerLoginDoneButtonListener implements ActionListener {
-      private Controller controller;
-      
-      CustomerLoginDoneButtonListener(Controller controller) {
-         this.controller = controller;
-      }
-      
-      @Override
-      public void actionPerformed(ActionEvent e) {
-         // TODO Auto-generated method stub
-         LoginView lv = new LoginView();
-         controller.setView(lv);
-         ((MainView) controller.mainView).setCurrentView(lv);
-      }
-   }
-   
-   private class NewCustomerCancelButtonListener implements ActionListener {
-      private Controller controller;
-      
-      NewCustomerCancelButtonListener(Controller controller) {
-         this.controller = controller;
-      }
-      
-      @Override
-      public void actionPerformed(ActionEvent e) {
-         // TODO Auto-generated method stub
-         LoginView lv = new LoginView();
-         controller.setView(lv);
-         ((MainView) controller.mainView).setCurrentView(lv);
-      }
-   }
-   
-   private class NewCustomerSubmitButtonListener implements ActionListener {
-      private NewCustomerView view;
-      
-      NewCustomerSubmitButtonListener(NewCustomerView view) {
-         this.view = view;
-      }
-      
-      @Override
-      public void actionPerformed(ActionEvent e) {
-          
-         // TODO Auto-generated method stub
-         Customer customer = new Customer(view.getFirstName(),
-                                          view.getLastName(),
-                                          view.getPassword(),
-                                          view.getEmail());
-         boolean added = model.addCustomer(customer);
-         if(added) {
-            JOptionPane.showMessageDialog(view, String.format("%s, %s was create successfully!", customer.getLastName(), customer.getFirstName()));
-         } else {
-            view.displayErrorMessage("Problem encountered while attempting to create the account.");
-         }
-      }
-   }
-   
-   private class LoginNewCustomerButtonListener implements ActionListener {
-      private Controller controller;
-      
-      LoginNewCustomerButtonListener(Controller controller) {
-         this.controller = controller;
-      }
-      
-      @Override
-      public void actionPerformed(ActionEvent e) {
-         NewCustomerView ncv = new NewCustomerView();
-         controller.setView(ncv);
-         ((MainView) controller.mainView).setCurrentView(ncv);
-         
-      }
-   }
-   
-   private class LoginButtonListener implements ActionListener {
-      private LoginView view;
-      
-      LoginButtonListener(LoginView view) {
-         this.view = view;
-      }
-      
-      @Override
-      public void actionPerformed(ActionEvent e) {
-         // TODO Auto-generated method stub
-         Customer dbCustomer = null;
-         try {
-            dbCustomer = model.getCustomer(view.getUsername());
-            if(dbCustomer == null) {
-               JOptionPane.showMessageDialog(null, String.format("%s does not exist", view.getUsername()), "New Customer Error Message", JOptionPane.ERROR_MESSAGE);
-            } else if(model.getDatabasePassword(dbCustomer.getPassword(), dbCustomer.getSalt()) != 
-                  model.getDatabasePassword(view.getPassword().toCharArray(), dbCustomer.getSalt())) {
-               JOptionPane.showMessageDialog(null, "The password provided is not valid", "New Customer Error Message", JOptionPane.ERROR_MESSAGE);
-            } else {
-               JOptionPane.showMessageDialog(view, "Login Successful!");
-            }
-         } catch (HeadlessException | NoSuchAlgorithmException | InvalidKeySpecException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-         } catch (IOException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-         }
-      }
-   }
-   
-   private class ViewReservationButtonListener implements ActionListener {
-       private Controller controller;
-       
-       ViewReservationButtonListener(Controller controller) {
-           this.controller = controller;
-       }
+	Controller(Model model, View mainView) {
+		this.model = model;
+		this.mainView = mainView;
+		setView(((MainView) mainView).getCurrentView());
+	}
 
-        @Override
-        public void actionPerformed(ActionEvent e) {
-           LoginView lv = new LoginView();
-           lv.getNewCustomerButton().setEnabled(false);
-           controller.setView(lv);
-          ((MainView) controller.mainView).setCurrentView(lv);
-          
-        }
-   }
-   
-   private class MakeReservationButtonListener implements ActionListener {
-        private Controller controller;
-        
-        MakeReservationButtonListener(Controller controller) {
-            this.controller = controller;
-        }
+	public void setView(View view) {
+		views.add(view);
+		// Lookup the view and add its listeners
+		if (view.getViewType() == ViewType.STARTER) {
+			StarterView starterView = (StarterView) view;
+			starterView.addDoneButtonActionListener(new CustomerLoginDoneButtonListener(this));
+			starterView.addViewReservationButtonListener(new ViewReservationButtonListener(this));
+			starterView.addMakeReservationButtonListener(new MakeReservationButtonListener(this));
 
-        @Override
-        public void actionPerformed(ActionEvent e) {
-           SelectRoomView srv = new SelectRoomView(createTestRooms());
-           controller.setView(srv);
-          ((MainView) controller.mainView).setCurrentView(srv);
-        }
-    }
-       
-    private class SelectRoomListener implements ActionListener {
-      private Controller controller;
-       
-      SelectRoomListener(Controller controller) {
-         this.controller = controller;
-      }
-       
-      @Override
-      public void actionPerformed(ActionEvent e) {
-         DetailsView dv = new DetailsView(findSelectedRoom((JButton)e.getSource()));
-         controller.setView(dv);
-         ((MainView) controller.mainView).setCurrentView(dv);
-      }
-      
-      public Room findSelectedRoom(JButton button) {
-         Room selectedRoom = null;
-         for(RoomType r : RoomType.values()) {
-            if(button.getName() == r.name()) {
-               if(button.getName() == RoomType.PARADISE.name()) {
-                  selectedRoom = new ParadiseRoom();
-               } else if(button.getName() == RoomType.STUDIO.name()) {
-                  selectedRoom = new StudioRoom();
-               } else if(button.getName() == RoomType.SUITE.name()) {
-                  selectedRoom = new SuiteRoom();
-               }
-            }
-         }
-         return selectedRoom;
-      }
-       
-    }
-    
-    private class DetailsViewNextButtonListener implements ActionListener {
-       private Controller controller;
-       private DetailsView view;
-       
-       DetailsViewNextButtonListener(Controller controller, DetailsView view) {
-          this.controller = controller;
-          this.view = view;
-       }
+		} else if (view.getViewType() == ViewType.NEW_CUSTOMER) {
+			NewCustomerView ncv = (NewCustomerView) view;
+			ncv.addCancelButtonListener(new NewCustomerCancelButtonListener(this));
+			ncv.addSubmitButtonListener(new NewCustomerSubmitButtonListener(ncv));
 
-      @Override
-      public void actionPerformed(ActionEvent e) {
-         if(!view.validDate(view.getDateTextField())) {
-            view.displayErrorMessage("The date must be in the form dd/MM/yyyy");
-            return;
-         }
-         
-         LoginView lv = new LoginView();
-         controller.setView(lv);
-         ((MainView) controller.mainView).setCurrentView(lv);
-      }
-       
-    }
-   
-   public List<Room> createTestRooms() {
-      ParadiseRoom pRoom = new ParadiseRoom();
-      StudioRoom studioRoom = new StudioRoom();
-      SuiteRoom suiteRoom = new SuiteRoom();
-      List<Room> rooms = new ArrayList<>();
-      rooms.add(pRoom);
-      rooms.add(suiteRoom);
-      rooms.add(studioRoom);
-      return rooms;
-   }
-   
+		} else if (view.getViewType() == ViewType.LOGIN) {
+			LoginView lv = (LoginView) view;
+			lv.addLoginNewCustomerButtonListener(new LoginNewCustomerButtonListener(this));
+			lv.addLoginButtonListener(new LoginButtonListener(lv));
+
+		} else if (view.getViewType() == ViewType.SELECT_ROOM) {
+			SelectRoomView srv = (SelectRoomView) view;
+			for (JButton button : srv.getSelectionButtons()) {
+				srv.addSelectRoomActionListener(button, new SelectRoomListener(this));
+			}
+
+		} else if (view.getViewType() == ViewType.RESERVATION) {
+			view = (ReservationView) view;
+
+		} else if (view.getViewType() == ViewType.DETAILS) {
+			DetailsView dv = (DetailsView) view;
+			dv.addNextButtonActionListener(new DetailsViewNextButtonListener(this, dv));
+
+		}
+	}
+
+	private class CustomerLoginDoneButtonListener implements ActionListener {
+		private Controller controller;
+
+		CustomerLoginDoneButtonListener(Controller controller) {
+			this.controller = controller;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			LoginView lv = new LoginView();
+			controller.setView(lv);
+			((MainView) controller.mainView).setCurrentView(lv);
+		}
+	}
+
+	private class NewCustomerCancelButtonListener implements ActionListener {
+		private Controller controller;
+
+		NewCustomerCancelButtonListener(Controller controller) {
+			this.controller = controller;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			LoginView lv = new LoginView();
+			controller.setView(lv);
+			((MainView) controller.mainView).setCurrentView(lv);
+		}
+	}
+
+	private class NewCustomerSubmitButtonListener implements ActionListener {
+		private NewCustomerView view;
+
+		NewCustomerSubmitButtonListener(NewCustomerView view) {
+			this.view = view;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+
+			Customer customer = new Customer(view.getFirstName(), view.getLastName(), view.getPassword(),
+					view.getEmail());
+			boolean added = model.addCustomer(customer);
+			if (added) {
+				JOptionPane.showMessageDialog(view, String.format("%s, %s was created successfully!",
+						customer.getLastName(), customer.getFirstName()));
+			} else {
+				view.displayErrorMessage("Problem encountered while attempting to create the account.");
+			}
+		}
+	}
+
+	private class LoginNewCustomerButtonListener implements ActionListener {
+		private Controller controller;
+
+		LoginNewCustomerButtonListener(Controller controller) {
+			this.controller = controller;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			NewCustomerView ncv = new NewCustomerView();
+			controller.setView(ncv);
+			((MainView) controller.mainView).setCurrentView(ncv);
+
+		}
+	}
+
+	private class LoginButtonListener implements ActionListener {
+		private LoginView view;
+
+		LoginButtonListener(LoginView view) {
+			this.view = view;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			Customer dbCustomer = null;
+			try {
+				dbCustomer = model.getCustomer(view.getUsername());
+				
+				if (dbCustomer == null) { //Customer does not exist with that username.
+					JOptionPane.showMessageDialog(null, String.format("%s does not exist", view.getUsername()),
+							"New Customer Error Message", JOptionPane.ERROR_MESSAGE);
+				} else { // Customer exists with username but we need to check password
+					//byte[] databasePassword = model.getDatabasePassword(dbCustomer.getEmail());
+					byte[] encryptedInputtedPassword = model.getEncryptedPassword(view.getPassword(),
+							dbCustomer.getSalt());
+					
+					byte[] databasePassword = dao.getPasswordFromDatabase(dbCustomer.getEmail());
+					
+					// DEBUG MESSAGES
+					
+					if (databasePassword == null) {
+						System.out.println("DB PW is NULL");
+					}
+					
+//					String saltString = new String (dbCustomer.getSalt());
+//					byte[] salt = dbCustomer.getSalt();
+//					System.out.println("Salt is: " + saltString);	
+//					//byte[] salt = dao.createSalt();
+//					char[] test = {'t', 'e', 's', 't'};
+//					byte[] encryptedPassword = dao.getEncryptedPassword(test, salt);
+//					String ep = new String(encryptedPassword);
+//					System.out.println("First: " + ep);
+//					byte[] encryptedPassword2 = dao.getEncryptedPassword(test, salt);
+//					String ep2 = new String(encryptedPassword2);
+//					System.out.println("Second: " + ep2);
+//					
+//					if(Arrays.equals(encryptedPassword, encryptedPassword2)) {
+//						System.out.println("Arrays are equal");
+//					} else {
+//						System.out.println("Arrays are not equal");
+//					}
+					
+					// END OF DEBUG MESSAGES
+					
+					if (Arrays.equals(databasePassword, encryptedInputtedPassword)) {
+						JOptionPane.showMessageDialog(view, "Login Successful!");
+					} else {
+						JOptionPane.showMessageDialog(null, "The password provided is not valid",
+								"New Customer Error Message", JOptionPane.ERROR_MESSAGE);
+					}
+
+				}
+			} catch (HeadlessException | NoSuchAlgorithmException | InvalidKeySpecException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+	}
+
+	private class ViewReservationButtonListener implements ActionListener {
+		private Controller controller;
+
+		ViewReservationButtonListener(Controller controller) {
+			this.controller = controller;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			LoginView lv = new LoginView();
+			lv.getNewCustomerButton().setEnabled(false);
+			controller.setView(lv);
+			((MainView) controller.mainView).setCurrentView(lv);
+
+		}
+	}
+
+	private class MakeReservationButtonListener implements ActionListener {
+		private Controller controller;
+
+		MakeReservationButtonListener(Controller controller) {
+			this.controller = controller;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			SelectRoomView srv = new SelectRoomView(createTestRooms());
+			controller.setView(srv);
+			((MainView) controller.mainView).setCurrentView(srv);
+		}
+	}
+
+	private class SelectRoomListener implements ActionListener {
+		private Controller controller;
+
+		SelectRoomListener(Controller controller) {
+			this.controller = controller;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			DetailsView dv = new DetailsView(findSelectedRoom((JButton) e.getSource()));
+			controller.setView(dv);
+			((MainView) controller.mainView).setCurrentView(dv);
+		}
+
+		public Room findSelectedRoom(JButton button) {
+			Room selectedRoom = null;
+			for (RoomType r : RoomType.values()) {
+				if (button.getName() == r.name()) {
+					if (button.getName() == RoomType.PARADISE.name()) {
+						selectedRoom = new ParadiseRoom();
+					} else if (button.getName() == RoomType.STUDIO.name()) {
+						selectedRoom = new StudioRoom();
+					} else if (button.getName() == RoomType.SUITE.name()) {
+						selectedRoom = new SuiteRoom();
+					}
+				}
+			}
+			return selectedRoom;
+		}
+
+	}
+
+	private class DetailsViewNextButtonListener implements ActionListener {
+		private Controller controller;
+		private DetailsView view;
+
+		DetailsViewNextButtonListener(Controller controller, DetailsView view) {
+			this.controller = controller;
+			this.view = view;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (!view.validDate(view.getDateTextField())) {
+				view.displayErrorMessage("The date must be in the form dd/MM/yyyy");
+				return;
+			}
+
+			LoginView lv = new LoginView();
+			controller.setView(lv);
+			((MainView) controller.mainView).setCurrentView(lv);
+		}
+
+	}
+
+	public List<Room> createTestRooms() {
+		ParadiseRoom pRoom = new ParadiseRoom();
+		StudioRoom studioRoom = new StudioRoom();
+		SuiteRoom suiteRoom = new SuiteRoom();
+		List<Room> rooms = new ArrayList<>();
+		rooms.add(pRoom);
+		rooms.add(suiteRoom);
+		rooms.add(studioRoom);
+		return rooms;
+	}
+
 }

@@ -12,6 +12,7 @@ public class Customer {
    private String email;
    private char[] password;
    private byte[] salt;
+   private byte[] ePassword;
    
    public Customer () {
 	   
@@ -52,6 +53,10 @@ public class Customer {
 	   this.password = password;
    }
    
+   public void setEPassword(byte[] ePassword) {
+	   this.ePassword = ePassword;
+   }
+   
    public void setSalt(byte[] salt) {
 	   this.salt = salt;
    }
@@ -61,12 +66,13 @@ public class Customer {
    public String getEmail() { return email; }
    public char[] getPassword() { return password; }
    public byte[] getSalt() { return salt; }
+   public byte[] getEPassword() { return ePassword; }
    
    public String toString() {
       return String.format("%s, %s", lastName, firstName);
    }
 
-
+   
 
 
 }
