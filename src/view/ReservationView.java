@@ -1,6 +1,9 @@
 package view;
+import java.awt.GridLayout;
+
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -17,9 +20,7 @@ public class ReservationView extends JPanel implements View {
    }
    
    private JPanel createReservationsView() {
-      //JPanel panel = new JPanel();
       JPanel scrollPane = new JPanel();
-      
       scrollPane.setBorder(BorderFactory.createTitledBorder("Reservations"));
       
       return scrollPane;
@@ -28,24 +29,22 @@ public class ReservationView extends JPanel implements View {
    private void addReservationView(Reservation reservation) {
       
       mainViewScrollPane.setBorder(BorderFactory.createTitledBorder("Reservation"));
-      mainViewScrollPane.setSize(500, 500);
       
+      JPanel panel = new JPanel(new GridLayout(5, 0));
       JLabel roomLabel = new JLabel(String.format("Room: %s", reservation.getRoom().getRoomType()));
       JLabel dateLabel = new JLabel(String.format("Date: %s", reservation.getDate()));
       JLabel nightsLabel = new JLabel(String.format("Nights: %d", reservation.getNumOfNights()));
       JLabel guestsLabel = new JLabel(String.format("Guests %d:", reservation.getOccupant().getNumOfGuests())); 
       JLabel costLabel = new JLabel(String.format("Cost: %.2f", reservation.getCost()));
       
-      mainViewScrollPane.add(roomLabel);
-      mainViewScrollPane.add(dateLabel);
-      mainViewScrollPane.add(nightsLabel);
-      mainViewScrollPane.add(guestsLabel);
-      mainViewScrollPane.add(costLabel);
+      panel.add(roomLabel);
+      panel.add(dateLabel);
+      panel.add(nightsLabel);
+      panel.add(guestsLabel);
+      panel.add(costLabel);
+      mainViewScrollPane.add(panel);
       JScrollPane scroller = new JScrollPane(mainViewScrollPane);
       this.add(scroller);
-      //mainViewScrollPane.add(panel);
-      //this.add(mainViewScrollPane);
-      
    }
 
    public void addReservation(Reservation reservation) {
@@ -55,7 +54,7 @@ public class ReservationView extends JPanel implements View {
    @Override
    public void displayErrorMessage(String message) {
       // TODO Auto-generated method stub
-      
+      JOptionPane.showMessageDialog(this, message, "Reservation Error Message", JOptionPane.ERROR_MESSAGE);
    }
 
    @Override

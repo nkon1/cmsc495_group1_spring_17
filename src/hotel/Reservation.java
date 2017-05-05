@@ -1,17 +1,8 @@
 package hotel;
 import java.util.Date;
+import java.util.Random;
 
-
-/** Created by:
- *  Edited 04/28/2017 by Tiff
- *  	-Added payment to Reservation constructor
- *  	-Added payment methods
- *  Edited 04/30/2017 by Tiff
- *  	-added blank constructor
- *  	-added getters
- */
-
-import database.Payment;
+import customer.Payment;
 import room.Room;
 public class Reservation {
 
@@ -23,17 +14,17 @@ public class Reservation {
    private double cost = 0;
    private int bookingID;
    
-   public Reservation() {
-	   
-   }
+   public Reservation() {}
   
-   public Reservation(Occupant occupant, Room room, Payment payment, Date date, int numOfNights) {
+   public Reservation(Occupant occupant, Room room, Payment payment, Date date, int numOfNights, double cost) {
       this.occupant = occupant;
       this.room = room;
       this.payment = payment;
       this.date = date;
       this.numOfNights = numOfNights;
-      cost = calculateCost();
+      this.cost = cost;
+      Random random = new Random();
+      bookingID = random.nextInt(100000);
    }
    
    public void setBookingID(int bookingID) {
@@ -64,9 +55,8 @@ public class Reservation {
 	   this.cost = cost;
    }
    
-   public double calculateCost() {
-      cost = room.getCost() * numOfNights;
-      return cost;
+   public int getBookingID() {
+      return bookingID;
    }
    
    public Occupant getOccupant() { return occupant; }

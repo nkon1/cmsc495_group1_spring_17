@@ -1,7 +1,5 @@
-package database;
+package customer;
 import java.util.Date;
-import customer.Customer;
-import customer.Address;
 
 /**
  * Edited 04/30/2016 by Tiff
@@ -12,9 +10,9 @@ import customer.Address;
 
 public class Payment {
     
-	private static String email;
-	private static String cardHolderName;
-	private static String cardType;
+	 private static String email;
+	 private static String cardHolderName;
+	 private static String cardType;
     private static String accountNumber;
     private static Date expirationDate;
     private static String securityNum;
@@ -41,11 +39,11 @@ public class Payment {
     }
     
     public Payment(String email, String cardHolderName, String cardType, String accountNumber, 
-    		Date expireDate, Address billing){
+        Date expireDate, Address billing){
         this.email = email;
         this.cardHolderName = cardHolderName;
         this.cardType = cardType;
-    	this.accountNumber = accountNumber;
+        this.accountNumber = accountNumber;
         this.expirationDate = expireDate;        
         this.billing = billing;
     }

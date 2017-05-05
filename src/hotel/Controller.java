@@ -18,14 +18,14 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
 import customer.Customer;
-import database.DataAccessObjectImpl;
-
+import customer.Payment;
 import room.ParadiseRoom;
 import room.Room;
 import room.RoomType;
@@ -41,7 +41,6 @@ public class Controller {
 	private Model model;
 	private View mainView;
 	private List<View> views = new ArrayList<>();
-	private DataAccessObjectImpl dao = new DataAccessObjectImpl();
 
    Controller(Model model, View mainView) {
       this.model = model;
@@ -66,7 +65,7 @@ public class Controller {
       } else if(view.getViewType() == ViewType.LOGIN) {
          LoginView lv = (LoginView)view;
          lv.addLoginNewCustomerButtonListener(new LoginNewCustomerButtonListener(this));
-         lv.addLoginButtonListener(new LoginButtonListener(lv));
+         lv.addLoginButtonListener(new LoginButtonListener(this, lv, createReservation()));
          
       } else if(view.getViewType() == ViewType.SELECT_ROOM) {
          SelectRoomView srv = (SelectRoomView)view;
@@ -134,6 +133,7 @@ public class Controller {
          boolean added = model.addCustomer(customer);
          if(added) {
             JOptionPane.showMessageDialog(view, String.format("%s, %s was create successfully!", customer.getLastName(), customer.getFirstName()));
+            view.getCancelButton().setText("Done");
          } else {
             view.displayErrorMessage("Problem encountered while attempting to create the account.");
          }
@@ -157,10 +157,19 @@ public class Controller {
    }
    
    private class LoginButtonListener implements ActionListener {
+      private Controller controller;
       private LoginView view;
+      private Reservation reservation = null;
       
-      LoginButtonListener(LoginView view) {
+      LoginButtonListener(Controller controller, LoginView view) {
+         this.controller = controller;
          this.view = view;
+      }
+      
+      LoginButtonListener(Controller controller, LoginView view, Reservation reservation) {
+         this.controller = controller;
+         this.view = view;
+         this.reservation = reservation;
       }
       
       @Override
@@ -171,19 +180,47 @@ public class Controller {
             dbCustomer = model.getCustomer(view.getUsername());
             if(dbCustomer == null) {
                JOptionPane.showMessageDialog(null, String.format("%s does not exist", view.getUsername()), "New Customer Error Message", JOptionPane.ERROR_MESSAGE);
-            } else if(model.getDatabasePassword(dbCustomer.getPassword(), dbCustomer.getSalt()) != 
-                  model.getDatabasePassword(view.getPassword().toCharArray(), dbCustomer.getSalt())) {
-               JOptionPane.showMessageDialog(null, "The password provided is not valid", "New Customer Error Message", JOptionPane.ERROR_MESSAGE);
             } else {
-               JOptionPane.showMessageDialog(view, "Login Successful!");
+               if(login(dbCustomer)) {
+                  if(reservation == null) {
+                     // This means the customer may be just reviewing current reservations
+                     ReservationView rv = new ReservationView();
+                     controller.setView(rv);
+                     ((MainView) controller.mainView).setCurrentView(rv);
+                  } else {
+                     // Display reservation review prior to final submissions
+                     ReservationView rv = new ReservationView();
+                     rv.addReservation(reservation);
+                     controller.setView(rv);
+                     ((MainView) controller.mainView).setCurrentView(rv);
+                  }
+              }
             }
-         } catch (HeadlessException | NoSuchAlgorithmException | InvalidKeySpecException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
          } catch (IOException e1) {
             // TODO Auto-generated catch block
             e1.printStackTrace();
+         } catch (HeadlessException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+         } catch (NoSuchAlgorithmException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+         } catch (InvalidKeySpecException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
          }
+      }
+      
+      private boolean login(Customer dbCustomer) throws HeadlessException, NoSuchAlgorithmException, InvalidKeySpecException {
+         boolean success = false;
+         if(model.getDatabasePassword(dbCustomer.getPassword(), dbCustomer.getSalt()) != 
+               model.getDatabasePassword(view.getPassword().toCharArray(), dbCustomer.getSalt())) {
+            JOptionPane.showMessageDialog(null, "The password provided is not valid", "New Customer Error Message", JOptionPane.ERROR_MESSAGE);
+         } else {
+            JOptionPane.showMessageDialog(view, "Login Successful!");
+            success = true;
+         }
+         return success;
       }
    }
    
@@ -274,7 +311,7 @@ public class Controller {
        
     }
    
-   public List<Room> createTestRooms() {
+   private List<Room> createTestRooms() {
       ParadiseRoom pRoom = new ParadiseRoom();
       StudioRoom studioRoom = new StudioRoom();
       SuiteRoom suiteRoom = new SuiteRoom();
@@ -283,6 +320,14 @@ public class Controller {
       rooms.add(suiteRoom);
       rooms.add(studioRoom);
       return rooms;
+   }
+   
+   private Reservation createReservation() {
+      Customer customer = new Customer("test", "user", "password".toCharArray(), "test@test.com");
+      Occupant occupant = new Occupant(customer, 2);
+      Reservation r = null;
+      r = new Reservation(occupant, new ParadiseRoom(), new Payment(), new Date() {}, 2, 179.99);
+      return r;
    }
    
 }

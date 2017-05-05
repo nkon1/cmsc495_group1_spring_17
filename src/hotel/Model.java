@@ -26,4 +26,8 @@ public class Model {
     public byte[] getDatabasePassword(char[] password, byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException {
        return dao.getEncryptedPassword(password, salt);
     }
+    
+    public Reservation getReservationFromDatabase(int bookingID) throws IOException {
+       return dao.getReservationFromDatabase(bookingID);
+    }
 }

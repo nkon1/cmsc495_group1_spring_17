@@ -10,6 +10,7 @@ import java.sql.SQLException;
 
 import room.Room;
 import customer.Customer;
+import customer.Payment;
 
 /** Created 04/23/2016 by Tiff 
  *     	-addCustomerToDatabase()

@@ -13,9 +13,7 @@ public class Customer {
    private char[] password;
    private byte[] salt;
    
-   public Customer () {
-	   
-   }
+   public Customer () {}
    
    public Customer(String firstName, String lastName, char[] password, byte[] salt) {
 	   this.firstName = firstName;
@@ -65,8 +63,5 @@ public class Customer {
    public String toString() {
       return String.format("%s, %s", lastName, firstName);
    }
-
-
-
 
 }

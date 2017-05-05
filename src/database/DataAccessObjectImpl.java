@@ -25,7 +25,8 @@ import room.StudioRoom;
 import room.SuiteRoom;
 import customer.Address;
 import customer.Customer;
-import database.Payment.cardType;
+import customer.Payment;
+import customer.Payment.cardType;
 
 /** Created 04/23/2016 by Tiff 
  *     	-addCustomerToDatabase()

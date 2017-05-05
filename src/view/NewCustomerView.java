@@ -258,4 +258,8 @@ public class NewCustomerView extends JPanel implements View {
       // TODO Auto-generated method stub
       return ViewType.NEW_CUSTOMER;
    }
+   
+   public JButton getCancelButton() { 
+      return cancelButton;
+   }
 }

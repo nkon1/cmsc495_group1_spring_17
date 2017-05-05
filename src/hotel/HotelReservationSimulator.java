@@ -1,7 +1,6 @@
 package hotel;
 import view.MainView;
 import view.StarterView;
-import java.sql.Connection;
 import java.sql.SQLException;
 
 import database.DataAccessObjectImpl;
