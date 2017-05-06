@@ -178,6 +178,7 @@ public class Controller {
                if(login(dbCustomer)) {
                   if(view.getReservation() == null) {
                      // This means the customer may be just reviewing current reservations
+                     //TODO: Get reservations by email
                      ReservationView rv = new ReservationView();
                      controller.setView(rv);
                      ((MainView) controller.mainView).setCurrentView(rv);
