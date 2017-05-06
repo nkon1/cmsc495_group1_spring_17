@@ -33,6 +33,8 @@ import view.ViewType;
 /*
  * Edited 04/30/2017 by Tiff
  * 		-added dao method to submitButtonListener
+ * Edited 05/06/2017 by Tiff
+ * 		-fixed login method
  */
 
 public class Controller {
