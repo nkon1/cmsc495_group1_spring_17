@@ -4,6 +4,8 @@ import hotel.Occupant;
 import hotel.Reservation;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
 //import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -15,9 +17,11 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import javax.xml.bind.DatatypeConverter;
 
 import room.ParadiseRoom;
 import room.Room;
@@ -67,8 +71,8 @@ public class DataAccessObjectImpl implements DataAccessObject {
             	String email = customer.getEmail();
             	String firstName = customer.getFirstName();
             	String lastName = customer.getLastName();
-            	char[] password = customer.getPassword();
-            	
+            	char[] tempPassword = customer.getPassword();
+            	String password = new String(tempPassword);
             	byte[] salt;  
             	// default value for employeeStatus is always false, requires admin 
             	// rights to reflect true
@@ -77,7 +81,7 @@ public class DataAccessObjectImpl implements DataAccessObject {
             	// insert customer into database
             	try {
 					salt = createSalt();
-					ePassword = getEncryptedPassword(password, salt);
+					ePassword = getEncryptedPassword(password);
 					query = "INSERT INTO User (email, firstName, lastName, ePassword, salt, "
 	                		+ "employeeStatus) VALUES (?,?,?,?,?,?)";             
 	                pstmt = con.prepareStatement(query);
@@ -89,9 +93,6 @@ public class DataAccessObjectImpl implements DataAccessObject {
 	                pstmt.setBoolean(6, employeeStatus);             	                
 	                pstmt.execute();
 	                
-	                // debugging
-	                System.out.println("Password is: " + password);
-	                // end debugging
 	                con.close();
 	                // customer inserted
 	                return true;
@@ -129,6 +130,7 @@ public class DataAccessObjectImpl implements DataAccessObject {
             	//queryCustomer.setEPassword(tempPassword.toCharArray());
             	queryCustomer.setEPassword(ePassword);
             	queryCustomer.setSalt(salt);
+            	      	
             	
             	con.close(); 
             	return queryCustomer;            
@@ -425,16 +427,28 @@ public class DataAccessObjectImpl implements DataAccessObject {
         return dsalt;
     }
     
-    public byte[] getEncryptedPassword(char[] password, byte[] salt)
-            throws NoSuchAlgorithmException, InvalidKeySpecException {
-        // PBKDF2 with SHA-1 as the hashing algorithm. 
-        String algorithm = "PBKDF2WithHmacSHA1";
-        // SHA-1 generates 160 bit hashes
-        int derivedKeyLength = 160;
-        int iterations = 20000;
-        KeySpec spec = new PBEKeySpec(password, salt, iterations, derivedKeyLength);
-        SecretKeyFactory f = SecretKeyFactory.getInstance(algorithm);
-        return f.generateSecret(spec).getEncoded();
+//    public byte[] getEncryptedPassword(char[] password, byte[] salt)
+//            throws NoSuchAlgorithmException, InvalidKeySpecException {
+//        // PBKDF2 with SHA-1 as the hashing algorithm. 
+//        String algorithm = "PBKDF2WithHmacSHA1";
+//        // SHA-1 generates 160 bit hashes
+//        int derivedKeyLength = 160;
+//        int iterations = 20000;
+//        KeySpec spec = new PBEKeySpec(password, salt, iterations, derivedKeyLength);
+//        SecretKeyFactory f = SecretKeyFactory.getInstance(algorithm);
+//        return f.generateSecret(spec).getEncoded();
+//    }
+    
+    public byte[] getEncryptedPassword(String password)
+            throws NoSuchAlgorithmException, InvalidKeySpecException, UnsupportedEncodingException {
+        // SHA-1 as the hashing algorithm. 
+		MessageDigest digest = MessageDigest.getInstance("SHA-1");
+		digest.reset();
+		byte[] ePassword = digest.digest(password.getBytes("UTF-8"));
+		byte[] tempPassword = DatatypeConverter.printHexBinary(ePassword).getBytes("UTF-8");
+		byte[] finalEPassword = new byte[20];
+		System.arraycopy(tempPassword, 0, finalEPassword, 0, finalEPassword.length);
+		return finalEPassword;
     }
     
     public static Connection getConnection() throws ClassNotFoundException, SQLException {
