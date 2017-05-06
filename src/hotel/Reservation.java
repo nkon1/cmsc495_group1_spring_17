@@ -1,5 +1,4 @@
 package hotel;
-import java.util.Date;
 import java.util.Random;
 
 import customer.Payment;
@@ -9,14 +8,21 @@ public class Reservation {
    private Occupant occupant;
    private Room room;
    private Payment payment;
-   private Date date;
+   private String date;
    private int numOfNights = 0;
    private double cost = 0;
    private int bookingID;
    
    public Reservation() {}
   
-   public Reservation(Occupant occupant, Room room, Payment payment, Date date, int numOfNights, double cost) {
+   public Reservation(Room room, String date, int numOfNights, double cost) {
+      this.room = room;
+      this.date = date;
+      this.numOfNights = numOfNights;
+      this.cost = cost;
+   }
+   
+   public Reservation(Occupant occupant, Room room, Payment payment, String date, int numOfNights, double cost) {
       this.occupant = occupant;
       this.room = room;
       this.payment = payment;
@@ -43,7 +49,7 @@ public class Reservation {
 	   this.payment = payment;
    }
    
-   public void setDate(Date date) {
+   public void setDate(String date) {
       this.date = date;
    }
    
@@ -62,7 +68,7 @@ public class Reservation {
    public Occupant getOccupant() { return occupant; }
    public Room getRoom() { return room; }
    public Payment getPayment() { return payment; }
-   public Date getDate() { return date; }
+   public String getDate() { return date; }
    public int getNumOfNights() { return numOfNights; }
    public double getCost() { return cost; }
 }

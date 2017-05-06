@@ -7,16 +7,12 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
 import customer.Customer;
-import customer.Payment;
-import database.DataAccessObjectImpl;
 import room.ParadiseRoom;
 import room.Room;
 import room.RoomType;
@@ -65,10 +61,8 @@ public class Controller {
          
       } else if(view.getViewType() == ViewType.LOGIN) {
          LoginView lv = (LoginView)view;
-         
-         // Create reservation from login view
          lv.addLoginNewCustomerButtonListener(new LoginNewCustomerButtonListener(this));
-         lv.addLoginButtonListener(new LoginButtonListener(this, lv, createReservation(lv)));
+         lv.addLoginButtonListener(new LoginButtonListener(this, lv));
          
       } else if(view.getViewType() == ViewType.SELECT_ROOM) {
          SelectRoomView srv = (SelectRoomView)view;
@@ -166,12 +160,10 @@ public class Controller {
    private class LoginButtonListener implements ActionListener {
       private Controller controller;
       private LoginView view;
-      private Reservation reservation = null;
       
-      LoginButtonListener(Controller controller, LoginView view, Reservation reservation) {
+      LoginButtonListener(Controller controller, LoginView view) {
          this.controller = controller;
          this.view = view;
-         this.reservation = reservation;
       }
       
       @Override
@@ -184,15 +176,15 @@ public class Controller {
                JOptionPane.showMessageDialog(null, String.format("%s does not exist", view.getEmail()), "New Customer Error Message", JOptionPane.ERROR_MESSAGE);
             } else {
                if(login(dbCustomer)) {
-                  if(reservation == null) {
+                  if(view.getReservation() == null) {
                      // This means the customer may be just reviewing current reservations
                      ReservationView rv = new ReservationView();
                      controller.setView(rv);
                      ((MainView) controller.mainView).setCurrentView(rv);
                   } else {
                      // Display reservation review prior to final submissions
-                     // Create the reservation
-                     ConfirmReservationView crv = new ConfirmReservationView(reservation);
+                     view.getReservation().setOccupant(new Occupant(dbCustomer, view.getReservation().getNumOfNights()));
+                     ConfirmReservationView crv = new ConfirmReservationView(view.getReservation());
                      controller.setView(crv);
                      ((MainView) controller.mainView).setCurrentView(crv);
                   }
@@ -213,10 +205,10 @@ public class Controller {
          }
       }
       
-      private boolean login(Customer dbCustomer) throws HeadlessException, NoSuchAlgorithmException, InvalidKeySpecException {
+      private boolean login(Customer dbCustomer) throws HeadlessException, NoSuchAlgorithmException, InvalidKeySpecException, IOException {
          boolean success = false;
-         if(model.getDatabasePassword(dbCustomer.getPassword(), dbCustomer.getSalt()) != 
-               model.getDatabasePassword(view.getPassword().toCharArray(), dbCustomer.getSalt())) {
+         if(model.getDatabasePassword(dbCustomer.getEmail()) != 
+               new String(view.getPassword()).getBytes()) {
             JOptionPane.showMessageDialog(null, "The password provided is not valid", "New Customer Error Message", JOptionPane.ERROR_MESSAGE);
          } else {
             JOptionPane.showMessageDialog(view, "Login Successful!");
@@ -252,7 +244,7 @@ public class Controller {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-           SelectRoomView srv = new SelectRoomView(createTestRooms());
+           SelectRoomView srv = new SelectRoomView(createRooms());
            controller.setView(srv);
           ((MainView) controller.mainView).setCurrentView(srv);
         }
@@ -306,7 +298,8 @@ public class Controller {
             return;
          }
          
-         LoginView lv = new LoginView();
+         Reservation reservation = new Reservation(view.getSelectedRoom(), view.getDateTextField(), view.getNumOfNights(), view.getTotalCost());
+         LoginView lv = new LoginView(reservation);
          controller.setView(lv);
          ((MainView) controller.mainView).setCurrentView(lv);
       }
@@ -326,16 +319,8 @@ public class Controller {
          model.addReservationToDatabase(view.getReservation());
       }
     }
-   
-   private Reservation createReservation(Customer customer) {
-      Customer customer = new Customer("test", "user", "password".toCharArray(), "test@test.com");
-      Occupant occupant = new Occupant(customer, 2);
-      Reservation r = null;
-      r = new Reservation(occupant, new ParadiseRoom(), new Payment(), new Date() {}, 2, 179.99);
-      return r;
-   }
 
-	public List<Room> createTestRooms() {
+	public List<Room> createRooms() {
 		ParadiseRoom pRoom = new ParadiseRoom();
 		StudioRoom studioRoom = new StudioRoom();
 		SuiteRoom suiteRoom = new SuiteRoom();

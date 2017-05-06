@@ -9,6 +9,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import hotel.Reservation;
+
 public class LoginView extends JPanel implements View {
    private static final long serialVersionUID = 2090770939931306216L;
    private JPanel mainPanel = new JPanel();
@@ -18,6 +20,7 @@ public class LoginView extends JPanel implements View {
    private JPasswordField passwordField = new JPasswordField(20);
    private JButton loginButton = new JButton("Log In");
    private JButton newCustomerButton = new JButton("New Customer");
+   private Reservation reservation = null;
    
    public LoginView() {
       mainPanel.setLayout(new GridLayout(2, 0));
@@ -33,6 +36,11 @@ public class LoginView extends JPanel implements View {
       mainPanel.add(buttonPanel);
       
       this.add(mainPanel);
+   }
+   
+   public LoginView(Reservation reservation) {
+      this();
+      this.reservation = reservation;
    }
    
    public void setUserLabel(String text) {
@@ -87,5 +95,9 @@ public class LoginView extends JPanel implements View {
    
    public JButton getNewCustomerButton() {
       return newCustomerButton;
+   }
+   
+   public Reservation getReservation() {
+      return reservation;
    }
 }

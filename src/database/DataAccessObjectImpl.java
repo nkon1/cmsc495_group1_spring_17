@@ -210,7 +210,7 @@ public class DataAccessObjectImpl implements DataAccessObject {
 			String User_email = reservation.getOccupant().getCustomer().getEmail();
 			int Rooms_roomID = getRoomNumber(reservation.getRoom());
 			int Payment_payID = getPaymentNumber(reservation.getPayment());
-			Date checkIn = (Date) reservation.getDate();
+			String checkIn = reservation.getDate();
 			int lengthOfStay = reservation.getNumOfNights();
 			int numOfGuests = reservation.getOccupant().getNumOfGuests();
 			double finalCost = reservation.getCost();
@@ -221,7 +221,7 @@ public class DataAccessObjectImpl implements DataAccessObject {
             pstmt.setString(1, User_email);
             pstmt.setInt(2, Rooms_roomID);
             pstmt.setInt(3, Payment_payID);
-            pstmt.setDate(4, checkIn);
+            pstmt.setString(4, checkIn);
             pstmt.setInt(5, lengthOfStay);
             pstmt.setInt(6, numOfGuests);
             pstmt.setDouble(7, finalCost);
@@ -248,7 +248,7 @@ public class DataAccessObjectImpl implements DataAccessObject {
             	String User_email = rs.getString("User_email");
             	int Rooms_roomID = rs.getInt("Rooms_roomID");
             	int Payment_payID = rs.getInt("Payment_payID");
-            	Date checkIn = rs.getDate(5);
+            	String checkIn = rs.getString(5);
             	int lengthOfStay = rs.getInt("lengthOfStay");
             	int numOfGuests = rs.getInt("numOfGuests");
             	double finalCost = rs.getDouble("finalCost");

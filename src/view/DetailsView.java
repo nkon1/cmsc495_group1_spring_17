@@ -133,6 +133,19 @@ public class DetailsView extends JPanel implements View {
       JOptionPane.showMessageDialog(this, message, "Invalid Content Error Message", JOptionPane.ERROR_MESSAGE);
    }
    
+   public Room getSelectedRoom() {
+      return selectedRoom;
+   }
+   
+   public int getNumOfNights() {
+      return Integer.parseInt(numOfNightsTextField.getText());
+   }
+   
+   public double getTotalCost() {
+      int cost = Integer.parseInt(numOfNightsTextField.getText().trim());
+      return selectedRoom.getCost() * cost;
+   }
+   
    private void updateCost() {
       if(numOfNightsTextField.getText().trim() == "")
          return;
