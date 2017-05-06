@@ -49,6 +49,8 @@ import customer.Payment.cardType;
  *  	-getPayment()
  *  Edited 05/03/2017 by Tiff
  *  	-edited methods to change pasword as char[]
+ *  Edited 05/06/2017 by Tiff
+ *  	-fixed getEncryptedPassword method
  */
 
 
@@ -426,18 +428,6 @@ public class DataAccessObjectImpl implements DataAccessObject {
         random.nextBytes(dsalt);
         return dsalt;
     }
-    
-//    public byte[] getEncryptedPassword(char[] password, byte[] salt)
-//            throws NoSuchAlgorithmException, InvalidKeySpecException {
-//        // PBKDF2 with SHA-1 as the hashing algorithm. 
-//        String algorithm = "PBKDF2WithHmacSHA1";
-//        // SHA-1 generates 160 bit hashes
-//        int derivedKeyLength = 160;
-//        int iterations = 20000;
-//        KeySpec spec = new PBEKeySpec(password, salt, iterations, derivedKeyLength);
-//        SecretKeyFactory f = SecretKeyFactory.getInstance(algorithm);
-//        return f.generateSecret(spec).getEncoded();
-//    }
     
     public byte[] getEncryptedPassword(String password)
             throws NoSuchAlgorithmException, InvalidKeySpecException, UnsupportedEncodingException {

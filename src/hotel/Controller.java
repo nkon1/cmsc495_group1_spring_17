@@ -208,8 +208,7 @@ public class Controller {
       
       private boolean login(Customer dbCustomer) throws HeadlessException, NoSuchAlgorithmException, InvalidKeySpecException, IOException {
          boolean success = false;
-         byte[] dbPassword = dbCustomer.getEPassword();
-         
+         byte[] dbPassword = dbCustomer.getEPassword();         
          String viewPassword = new String(view.getPassword());
          byte[] ePassword = model.getEncryptedPassword(viewPassword);
          
