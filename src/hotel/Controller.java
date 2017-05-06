@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -32,6 +33,8 @@ import view.ViewType;
 /*
  * Edited 04/30/2017 by Tiff
  * 		-added dao method to submitButtonListener
+ * Edited 05/06/2017 by Tiff
+ * 		-fixed login method
  */
 
 public class Controller {
@@ -208,12 +211,15 @@ public class Controller {
       
       private boolean login(Customer dbCustomer) throws HeadlessException, NoSuchAlgorithmException, InvalidKeySpecException, IOException {
          boolean success = false;
-         if(model.getDatabasePassword(dbCustomer.getEmail()) != 
-               new String(view.getPassword()).getBytes()) {
-            JOptionPane.showMessageDialog(null, "The password provided is not valid", "New Customer Error Message", JOptionPane.ERROR_MESSAGE);
+         byte[] dbPassword = dbCustomer.getEPassword();         
+         String viewPassword = new String(view.getPassword());
+         byte[] ePassword = model.getEncryptedPassword(viewPassword);
+         
+         if(Arrays.equals(dbPassword, ePassword)) {
+        	 JOptionPane.showMessageDialog(view, "Login Successful!");
+        	 success = true;
          } else {
-            JOptionPane.showMessageDialog(view, "Login Successful!");
-            success = true;
+        	 JOptionPane.showMessageDialog(null, "The password provided is not valid", "New Customer Error Message", JOptionPane.ERROR_MESSAGE);
          }
          return success;
       }
