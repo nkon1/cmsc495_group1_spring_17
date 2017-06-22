@@ -444,7 +444,7 @@ public class DataAccessObjectImpl implements DataAccessObject {
     public static Connection getConnection() throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.jdbc.Driver");
         Connection con=DriverManager.getConnection(
-            "jdbc:mysql://51.255.204.89:3306/hotelDB","admins","cmsc495");
+            "jdbc:mysql://51.255.204.89:3306/hotelDB","serverName","password");
         return con;
     }
     
